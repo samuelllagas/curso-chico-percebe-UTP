@@ -200,6 +200,17 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
 .prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:.8rem}
 .prog i{display:block;height:100%;background:var(--accent)}
 .testbox{max-width:760px}
+
+/* Problemas tipo examen */
+.prob{background:var(--panel);border:2px solid var(--bar);border-radius:8px;margin:1.2rem 0;overflow:hidden;scroll-margin-top:60px}
+.ph{background:var(--bar);color:#f3f6f8;padding:.5rem .9rem;font:600 1.15rem var(--display);letter-spacing:.03em;display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;border-bottom:2px solid var(--accent)}
+.ph span{font:500 .75rem var(--mono);color:#f2b705;letter-spacing:.06em;text-transform:uppercase}
+.pb{padding:.4rem 1rem 1rem}
+.pb h5{font:700 1.15rem var(--display);color:var(--blue);margin:1.3rem 0 .3rem;padding-top:.5rem;border-top:1px dashed var(--line);letter-spacing:.02em}
+.pb p{margin:.45rem 0}
+.pq{margin-top:1rem!important}
+.teo{border-left:4px solid var(--accent);background:var(--pe);padding:.4rem .7rem;border-radius:0 6px 6px 0;font-size:.92rem}
+.blocks.thin{min-height:40px}
 </style>
 </head>
 <body>
@@ -221,6 +232,7 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
     <a href="#sesion-14">Sesión 14</a>
     <a href="#test">Opción múltiple</a>
     <a href="#vf">Verdadero o falso</a>
+    <a href="#problemas">Problemas tipo examen</a>
     <a href="#formulas">Fórmulas y revisión</a>
   </div>
 </nav>
@@ -701,6 +713,19 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
   <div class="testbox" id="quiz-vf"></div>
 </section>
 
+<!-- ===================== PROBLEMAS TIPO EXAMEN ===================== -->
+<section class="tab" id="problemas">
+  <h2>Problemas tipo examen</h2>
+  <p class="lead">20 ejercicios resueltos, 5 por sesión, con el mismo formato y extensión que usa el profesor. Cada paso indica la <b>teoría aplicada</b> y por qué se usa. Los datos son inventados: sirven para practicar el método, no son del docente.</p>
+  <div class="chips" id="psel" role="group" aria-label="Sesión">
+    <button type="button" class="btn" data-g="11" aria-pressed="true">Sesión 11</button>
+    <button type="button" class="btn" data-g="12" aria-pressed="false">Sesión 12</button>
+    <button type="button" class="btn" data-g="13" aria-pressed="false">Sesión 13</button>
+    <button type="button" class="btn" data-g="14" aria-pressed="false">Sesión 14</button>
+  </div>
+  <div id="pbox"></div>
+</section>
+
 </main>
 
 <script>
@@ -884,7 +909,7 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
   $$('.calc').forEach(function(el){var fn=CALC[el.dataset.calc]; if(fn) fn(el)});
 
   /* ---------- Pestañas con hash ---------- */
-  var tabs=['inicio','sesion-11','sesion-12','sesion-13','sesion-14','test','vf','formulas'];
+  var tabs=['inicio','sesion-11','sesion-12','sesion-13','sesion-14','test','vf','problemas','formulas'];
   function route(){
     var id=(location.hash||'').replace('#',''); if(tabs.indexOf(id)<0) id='inicio';
     $$('section.tab').forEach(function(s){s.classList.toggle('on',s.id===id)});
@@ -1222,6 +1247,251 @@ var TF=[
   runQuiz($('#quiz-mc'),{items:MC,kicker:'Opción múltiple',intro:'Elige una alternativa y pulsa «Siguiente». Te diré si es correcta; si no lo es, verás la respuesta correcta y por qué. Luego pulsa «Continuar».'});
   var TFI=TF.map(function(x){return [x[0],x[1],['Verdadero','Falso'],x[2]?0:1,x[3]]});
   runQuiz($('#quiz-vf'),{items:TFI,kicker:'Verdadero o falso',intro:'Lee la afirmación, elige Verdadero o Falso y pulsa «Siguiente». Si fallas, verás la respuesta correcta y la explicación.'});
+})();
+
+</script>
+<script>
+/* ===== Problemas tipo examen: mismo formato del profesor, datos propios ===== */
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  function F(n,d){ d=d==null?2:d; var m=Math.pow(10,d), v=Math.round(Math.abs(n)*m)/m, s=v.toFixed(d); if(d>0) s=s.replace(/0+$/,'').replace(/\.$/,''); var p=s.split('.'); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,' '); return (n<0?'-':'')+p.join(','); }
+  function S(n,d){return 'S/ '+F(n,d)}
+  function sum(a){return a.reduce(function(x,y){return x+y},0)}
+  function T(head,rows,right,foot){
+    var h='<div class="tw"><table><thead><tr>'+head.map(function(x,i){return '<th'+(right&&right.indexOf(i)>=0?' class="n"':'')+'>'+x+'</th>'}).join('')+'</tr></thead><tbody>';
+    rows.forEach(function(r){h+='<tr>'+r.map(function(c,i){return '<td'+(right&&right.indexOf(i)>=0?' class="n"':'')+'>'+c+'</td>'}).join('')+'</tr>'});
+    h+='</tbody>';
+    if(foot) h+='<tfoot><tr>'+foot.map(function(c,i){return '<td'+(right&&right.indexOf(i)>=0?' class="n"':'')+'>'+c+'</td>'}).join('')+'</tr></tfoot>';
+    return h+'</table></div>';
+  }
+  function teo(x){return '<p class="teo"><b>Teoría aplicada:</b> '+x+'</p>'}
+  function ul(a){return '<ul>'+a.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'}
+  function chips(a,leg){return '<div class="flow">'+a.map(function(x,i){return (i?'<div class="leg">'+(leg&&leg[i-1]?leg[i-1]:'')+'</div>':'')+'<div class="node">'+x+'</div>'}).join('')+'</div>'}
+  function prob(id,k,title,body){return '<article class="prob" id="'+id+'"><div class="ph"><span>Ejercicio propuesto '+k+'</span>'+title+'</div><div class="pb">'+body+'</div></article>'}
+
+  /* ================= SESIÓN 11 ================= */
+  function r11a(k,p){
+    var d=p.d,tot=sum(d),day=tot*p.lotes,red=(tot-p.mej)/tot*100;
+    var rows=d.map(function(x,i){return [i+1,p.n[i],p.n[i+1],F(x)+' m']});
+    return prob('p11-'+k,k,'Análisis de recorrido',
+      '<p>'+p.intro+'</p>'+T(['Secuencia','Área de origen','Área de destino','Distancia (m)'],rows,[3],['','','Distancia total',F(tot)+' m'])
+      +'<p>La distancia total se calcula sumando todos los desplazamientos: '+d.join(' + ')+' = <b>'+F(tot)+' m</b>.</p>'
+      +'<p>Si se procesan '+p.lotes+' lotes al día, con un ciclo completo por lote: '+F(tot)+' × '+p.lotes+' = '+F(day,0)+' m. Por tanto, se recorren <b>'+F(day/1000)+' km diarios</b> en el transporte de materiales.</p>'
+      +'<p><b>Evaluación de una mejora.</b> Supongamos que una nueva distribución reduce el recorrido por ciclo de '+F(tot)+' m a '+p.mej+' m.</p>'
+      +'<p>Reducción = ('+F(tot)+' − '+p.mej+') / '+F(tot)+' × 100 = <b>'+F(red)+' %</b>. Ahorro por ciclo: '+F(tot-p.mej)+' m.</p>'
+      +'<p><b>Interpretación:</b> la nueva distribución disminuye la distancia recorrida en '+F(red)+' %. Sin embargo, para confirmar la mejora global también se deben evaluar los tiempos de transporte, la manipulación de materiales, la seguridad y el costo de implementar los cambios.</p>'
+      +teo('análisis de recorrido: se suman los desplazamientos entre áreas para medir la distancia total. Se usa porque lo que no se mide no se puede comparar con una propuesta de mejora.'));
+  }
+  function r11b(k,p){
+    var d=p.d,tot=sum(d),day=tot*p.pz,sav=tot-p.mej,red=sav/tot*100;
+    return prob('p11-'+k,k,'Diagrama de recorrido sencillo',
+      '<p>'+p.intro+'</p><p><b>Diagrama de recorrido sencillo</b></p>'+chips(p.n,d.map(function(x){return F(x)+' m'}))
+      +'<p><b>Distancia total por pieza:</b> DT = '+d.join(' + ')+' = '+F(tot)+' m/pieza.</p>'
+      +'<p>Si se fabrican '+p.pz+' piezas al día, suponiendo que cada una realiza ese recorrido completo: D diaria = '+F(tot)+'('+p.pz+') = '+F(day,0)+' m. El resultado es de <b>'+F(day/1000)+' km diarios</b> de recorrido acumulado.</p>'
+      +'<p><b>Interpretación:</b> si se reorganizan las áreas y se reduce el recorrido a '+p.mej+' m por pieza, el ahorro será de '+F(sav)+' m por pieza, equivalente a una reducción del '+F(red)+' %.</p>'
+      +'<p>Reducción = ('+F(tot)+' − '+p.mej+') / '+F(tot)+' × 100 = '+F(red)+' %. Este análisis permite sustentar técnicamente una propuesta de mejora de la distribución de planta.</p>'
+      +teo('diagrama de recorrido sencillo: plano con áreas, flechas y distancias entre origen y destino. Se usa para visualizar el camino de cada pieza y convertirlo en metros acumulados al día.'));
+  }
+  function r11c(k,p){
+    var rows=p.rows,prod=rows.map(function(r){return r[1]*r[2]}),tot=sum(prod),red=(tot-p.mej)/tot*100;
+    return prob('p11-'+k,k,'Análisis de transportación',
+      '<p>'+p.intro+'</p>'+T(['Trayecto','Viajes/día','Distancia por viaje (m)'],rows.map(function(r){return [r[0],r[1],r[2]]}),[1,2])
+      +'<p>Calculamos la distancia total recorrida diariamente: D<sub>T</sub> = Σ (F<sub>i</sub> × D<sub>i</sub>)</p>'
+      +ul(rows.map(function(r,i){return r[0]+': '+r[1]+' × '+r[2]+' = '+F(prod[i],0)+' m.'}))
+      +'<p>D<sub>T</sub> = '+prod.map(function(x){return F(x,0)}).join(' + ')+' = <b>'+F(tot,0)+' m/día</b>.</p>'
+      +'<p>Si la reorganización de las áreas reduce el recorrido total a '+p.mej+' m diarios:</p><p>Reducción = ('+F(tot,0)+' − '+p.mej+') / '+F(tot,0)+' × 100 = <b>'+F(red)+' %</b>.</p>'
+      +'<p><b>Interpretación:</b> la nueva distribución reduce aproximadamente un '+F(red)+' % la distancia recorrida por los materiales, lo que puede disminuir el tiempo de transporte y sus costos asociados.</p>'
+      +teo('análisis de transportación: el flujo (viajes) por la distancia de cada tramo. Se multiplica porque un tramo corto con muchos viajes pesa más que uno largo que casi no se usa.'));
+  }
+  function r11m(k,p){
+    var L=p.l,M=p.m,n=L.length,names=p.names,i,j,pairs=[],flows=[];
+    for(i=0;i<n;i++)for(j=0;j<n;j++){ if(i!==j) flows.push({i:i,j:j,v:M[i][j]}); if(j>i) pairs.push({i:i,j:j,v:M[i][j]+M[j][i],f:M[i][j],r:M[j][i]}) }
+    flows.sort(function(a,b){return b.v-a.v}); var top=flows.slice(0,3);
+    var ps=pairs.slice().sort(function(a,b){return b.v-a.v});
+    var head=['Desde / Hacia'].concat(L), rows=M.map(function(r,ii){return [L[ii]].concat(r.map(function(x,jj){return ii===jj?'0':String(x)}))});
+    var b='<p>'+p.intro+'</p><p>La matriz de movimiento es:</p>'+T(head,rows,[1,2,3,4].slice(0,n))
+      +'<p>Las filas indican el área de origen y las columnas el área de destino.</p><p><b>Interpretación de la matriz:</b></p>'
+      +ul(top.map(function(x){return 'De '+L[x.i]+' hacia '+L[x.j]+' se realizan '+x.v+' movimientos diarios.'}));
+    var asy=pairs.slice().sort(function(a,b){return Math.abs(b.f-b.r)-Math.abs(a.f-a.r)})[0];
+    b+='<p>Los movimientos entre '+L[asy.i]+' y '+L[asy.j]+' son asimétricos: hay '+asy.f+' en un sentido y '+asy.r+' en el otro.</p>';
+    b+='<p><b>¿Qué áreas deben ubicarse más cerca?</b> Sumamos los movimientos en ambos sentidos de cada par:</p>'+ul(ps.map(function(x){return L[x.i]+' – '+L[x.j]+': '+x.f+' + '+x.r+' = <b>'+x.v+' movimientos/día</b>'}));
+    if(Math.min(top[0].i,top[0].j)!==ps[0].i||Math.max(top[0].i,top[0].j)!==ps[0].j) b+='<p>Observa que el mayor flujo en un solo sentido ('+L[top[0].i]+' → '+L[top[0].j]+', '+top[0].v+') no coincide con el par de mayor intercambio ('+L[ps[0].i]+' – '+L[ps[0].j]+', '+ps[0].v+'): por eso se suman ambos sentidos antes de decidir.</p>';
+    b+='<p><b>Interpretación:</b> '+p.concl(ps)+'</p>'+teo('análisis matricial: filas = origen, columnas = destino; se suman los dos sentidos de cada par porque los movimientos son asimétricos. El par con mayor intercambio es el que conviene ubicar más cerca, considerando también el espacio disponible y la seguridad.');
+    return prob('p11-'+k,k,'Análisis matricial',b);
+  }
+  var S11=[
+    r11a(1,{intro:'Una empresa fabrica calzado, y cada lote pasa por cuatro áreas de trabajo.',n:['Almacén de cuero','Corte','Aparado','Montaje','Almacén de producto terminado'],d:[18,22,30,25],lotes:12,mej:60}),
+    r11b(2,{intro:'Una pieza pasa por cuatro áreas: almacén de materia prima, corte, soldadura e inspección final.',n:['A. Almacén','B. Corte','C. Soldadura','D. Inspección final'],d:[24,16,20],pz:35,mej:42}),
+    r11c(3,{intro:'Una planta transporta materiales entre cuatro áreas. Se registraron los siguientes movimientos diarios:',rows:[['Almacén → Corte',12,15],['Corte → Ensamble',9,28],['Ensamble → Acabado',7,20],['Acabado → Despacho',5,35]],mej:560}),
+    r11m(4,{intro:'Una planta tiene tres áreas: A: Almacén. B: Ensamble. C: Pintura. Se registraron los siguientes movimientos diarios:',l:['A','B','C'],m:[[0,10,2],[3,0,26],[5,8,0]],concl:function(ps){return 'el análisis matricial permite identificar qué áreas tienen mayor intercambio de materiales. En este caso, se recomienda evaluar una distribución que acerque Ensamble (B) a Pintura (C) y, luego, Almacén (A) a Ensamble (B), considerando también el espacio disponible y la seguridad.'}}),
+    r11m(5,{intro:'Una planta tiene cuatro áreas: A: Almacén. B: Corte. C: Ensamble. D: Pintura. La matriz de flujo de materiales (origen – destino) es:',l:['A','B','C','D'],m:[[0,18,6,2],[3,0,14,9],[1,8,0,16],[0,5,7,0]],concl:function(ps){return 'los pares con mayor relación son C–D (23), B–C (22) y A–B (21). Conviene evaluar una distribución en secuencia A – B – C – D, con Ensamble y Pintura lo más próximos posible, considerando también el espacio disponible y la seguridad.'}})
+  ];
+
+  /* ================= SESIÓN 12 ================= */
+  var CODE={A:'cercanía absolutamente necesaria',E:'cercanía especialmente importante',I:'cercanía importante',O:'cercanía ordinaria',U:'proximidad sin importancia',X:'proximidad no deseable'};
+  function r12(k,p){
+    var tot=sum(p.areas.map(function(a){return a[2]})),rest=p.local-tot,by={};p.areas.forEach(function(a){by[a[0]]=a});
+    var used=[];'AEIOUX'.split('').forEach(function(c){if(p.rel.some(function(r){return r[1]===c})) used.push(c)});
+    var n=p.areas.length, num=['dos','tres','cuatro','cinco','seis'][n-2];
+    var b='<p>'+p.intro+'</p><p>La empresa dispone de un local de <b>'+p.local+' m²</b> y necesita distribuir '+num+' áreas.</p>'
+      +T(['Área','Espacio requerido (m²)'],p.areas.map(function(a){return [a[0]+': '+a[1],a[2]]}),[1],['Total requerido',tot]);
+    b+='<p>El espacio restante es de '+rest+' m² ('+p.local+' − '+tot+'), que se reservará inicialmente para pasillos y circulación. En la práctica, deberá comprobarse si es suficiente para la seguridad y el transporte interno.</p>';
+    b+='<h5>Método 1: diagrama relacional de espacios</h5><p><b>Objetivo:</b> determinar qué áreas deben estar próximas y cuánto espacio necesita cada una. Primero, establecemos las relaciones entre las áreas:</p>'
+      +T(['Relación entre áreas','Código','Justificación'],p.rel.map(function(r){return [r[0],'<span class="code c'+r[1]+'">'+r[1]+'</span>',r[2]]}))
+      +'<p>Los códigos significan: '+used.map(function(c){return c+': '+CODE[c]}).join('; ')+'.</p><p>Representamos la secuencia principal:</p>'
+      +chips(p.chain.map(function(c){return c+' · '+by[c][1]+' '+by[c][2]+' m²'}))+(p.nota1?'<p>'+p.nota1+'</p>':'')
+      +'<p><b>Resultado:</b> se identifica una secuencia de áreas que deben estar próximas para facilitar el traslado de los materiales.</p>'
+      +teo('diagrama relacional de espacios (tabla relacional + tamaño de cada área). Se usa porque primero hay que saber qué áreas van pegadas (A, E, I) y cuáles separadas (X) antes de dibujar un plano.');
+    b+='<h5>Método 2: disposición ideal</h5><p><b>Objetivo:</b> proponer la mejor distribución posible, sin considerar inicialmente las restricciones del edificio. Suponemos que el local permite organizar las áreas en una secuencia continua.</p><p>Propuesta ideal:</p>'
+      +'<div class="blocks" aria-label="Disposición ideal">'+p.chain.map(function(c){return '<div class="blk" style="flex:'+by[c][2]+'"><span>'+c+'. '+by[c][1]+'</span><b>'+by[c][2]+' m²</b></div>'}).join('')+'</div>'
+      +(p.idealNota?'<p>'+p.idealNota+'</p>':'')
+      +'<p>Esta propuesta busca:</p>'+ul(['Evitar retrocesos de los materiales.','Reducir las distancias de transporte.','Facilitar el control de la producción.','Mantener una secuencia lógica de fabricación.'])
+      +'<p><b>Resultado:</b> se obtiene un modelo de distribución eficiente que servirá como referencia para el diseño real.</p>'
+      +teo('disposición ideal: la distribución teórica sin limitaciones físicas ni económicas. Sirve de modelo de referencia, por eso se hace antes de pensar en el edificio.');
+    b+='<h5>Método 3: disposición práctica</h5><p><b>Objetivo:</b> adaptar la disposición ideal a las condiciones reales del local. Supongamos que '+p.supuesto+' La empresa propone la siguiente distribución:</p>'
+      +p.layout.map(function(row){var thin=row.length===1&&row[0]==='P';return '<div class="blocks'+(thin?' thin':'')+'">'+row.map(function(c){return c==='P'?'<div class="blk pas" style="flex:'+(rest*(thin?3:1))+'"><span>Pasillos y circulación</span><b>'+rest+' m²</b></div>':'<div class="blk" style="flex:'+by[c][2]+'"><span>'+c+'. '+by[c][1]+'</span><b>'+by[c][2]+' m²</b></div>'}).join('')+'</div>'}).join('')
+      +'<p class="hint">Esquema ilustrativo; antes de ejecutarlo deben verificarse las distancias, las relaciones de proximidad y la seguridad.</p>'
+      +'<p>'+p.practNota+' Sin embargo, se debe comprobar que el orden de las áreas no genere recorridos excesivos.</p>'
+      +'<p><b>Comprobación del espacio:</b> '+p.areas.map(function(a){return a[2]}).join(' + ')+' = '+tot+' m²; '+p.local+' − '+tot+' = '+rest+' m². El espacio restante es de '+rest+' m². Su suficiencia debe evaluarse según los equipos, los pasillos, las salidas de emergencia y las necesidades de manipulación de materiales.</p>'
+      +teo('disposición práctica: adapta la ideal a columnas, accesos, máquinas instaladas, presupuesto y seguridad. Se hace al final porque convierte el diseño teórico en uno viable, seguro y económicamente conveniente.');
+    b+='<h5>Comparación de resultados</h5>'+T(['Método','Resultado obtenido'],[['Diagrama relacional de espacios','Identifica áreas, superficies y proximidades necesarias'],['Disposición ideal','Propone una secuencia eficiente de producción'],['Disposición práctica','Adapta la propuesta a las condiciones reales del edificio']]);
+    return prob('p12-'+k,k,p.titulo,b);
+  }
+  var S12=[
+    r12(1,{titulo:'Fábrica de muebles de madera',intro:'Una empresa fabrica muebles de madera y desea mejorar la distribución de sus áreas para reducir los recorridos de materiales y aumentar la productividad.',local:600,
+      areas:[['A','Almacén de madera',90],['B','Corte y dimensionado',140],['C','Ensamblaje',200],['D','Almacén de muebles terminados',100]],
+      rel:[['A–B','A','La madera pasa al área de corte y dimensionado'],['B–C','A','Las piezas cortadas pasan a ensamblaje'],['C–D','A','Los muebles ensamblados pasan al almacén final'],['A–C','O','Existe relación, pero la cercanía es normal'],['A–D','X','Se busca evitar cruces innecesarios entre entradas y salidas']],
+      chain:['A','B','C','D'],supuesto:'el edificio tiene la puerta de recepción en el lado izquierdo, la puerta de despacho en el lado derecho y una fila de columnas estructurales en el centro.',
+      layout:[['A','B'],['P'],['C','D']],practNota:'En esta propuesta, las áreas se ubican respetando las columnas y los accesos: la recepción queda junto al almacén de madera y el despacho junto al almacén de muebles terminados.'}),
+    r12(2,{titulo:'Planta de envasado de jugos',intro:'Una empresa envasa jugos y desea ordenar sus áreas para reducir los movimientos de materiales y mejorar el control de la producción.',local:800,
+      areas:[['A','Recepción y almacén de insumos',110],['B','Preparación',150],['C','Envasado',220],['D','Almacén de producto terminado',130],['E','Laboratorio de calidad',40]],
+      rel:[['A–B','A','Los insumos pasan a preparación'],['B–C','A','El producto preparado pasa a envasado'],['C–D','A','Lo envasado pasa al almacén final'],['C–E','E','Las muestras del envasado deben revisarse con rapidez'],['B–E','I','Se toman muestras, pero no existe un movimiento directo constante'],['A–E','U','La cercanía no es relevante'],['A–D','X','Se busca evitar cruces innecesarios entre entradas y salidas']],
+      chain:['A','B','C','D'],nota1:'El laboratorio (E) se relaciona con envasado (C) con código E, por lo que debe quedar contiguo a esa área.',idealNota:'El laboratorio de calidad (E, 40 m²) se ubica al costado de Envasado, por su relación E.',
+      supuesto:'la puerta de recepción está a la izquierda, el despacho a la derecha y la línea de envasado ya está instalada sobre una base que no conviene mover por su costo.',
+      layout:[['A','B'],['P'],['E','C','D']],practNota:'Envasado (C) se mantiene donde está instalada y el resto de áreas se acomoda a su alrededor, con el laboratorio (E) contiguo a ella.'}),
+    r12(3,{titulo:'Taller metalmecánico',intro:'Un taller metalmecánico desea mejorar la distribución de sus áreas para reducir los recorridos de materiales y aumentar la productividad.',local:450,
+      areas:[['A','Almacén de materia prima',70],['B','Corte',90],['C','Soldadura',110],['D','Pintura',80],['E','Almacén de producto terminado',60]],
+      rel:[['A–B','A','La materia prima pasa al área de corte'],['B–C','A','Las piezas cortadas pasan a soldadura'],['C–D','A','Las piezas soldadas pasan a pintura'],['D–E','A','Las piezas pintadas pasan al almacén final'],['A–C','I','Hay movimiento de insumos, pero no es directo'],['C–E','O','La cercanía es normal'],['A–E','X','Se busca evitar cruces innecesarios entre entradas y salidas']],
+      chain:['A','B','C','D','E'],supuesto:'el edificio tiene una columna estructural en el centro, la máquina de soldar ya está instalada y el presupuesto no permite mover la cabina de pintura.',
+      layout:[['A','B','C'],['P'],['E','D']],practNota:'Soldadura (C) y Pintura (D) conservan su lugar actual y las demás áreas se ordenan alrededor siguiendo, en lo posible, la secuencia de producción.'}),
+    r12(4,{titulo:'Fábrica de componentes plásticos',intro:'Una empresa fabrica componentes plásticos y desea mejorar la distribución de sus áreas para reducir los recorridos de materiales y aumentar la productividad.',local:700,
+      areas:[['A','Almacén de resina',120],['B','Inyección',220],['C','Ensamblaje',160],['D','Almacén de producto terminado',90]],
+      rel:[['A–B','A','La resina pasa al área de inyección'],['B–C','A','Las piezas inyectadas pasan a ensamblaje'],['C–D','A','Los componentes ensamblados pasan al almacén final'],['B–D','E','Las piezas simples salen de inyección directamente al almacén'],['A–C','U','No existe relación directa'],['A–D','X','Se busca evitar cruces innecesarios entre entradas y salidas']],
+      chain:['A','B','C','D'],supuesto:'el edificio tiene columnas en el centro, recepción a la izquierda y despacho a la derecha. La máquina de inyección ya está instalada y su traslado supera el presupuesto disponible.',
+      layout:[['A','B'],['P'],['C','D']],practNota:'Inyección (B) no se mueve; las demás áreas se ubican en torno a ella, de modo que se respete la secuencia A – B – C – D y la relación E entre B y D.'}),
+    r12(5,{titulo:'Taller de confecciones',intro:'Un taller de confecciones desea mejorar la distribución de sus áreas para reducir los recorridos de materiales y aumentar la productividad.',local:550,
+      areas:[['A','Almacén de telas',85],['B','Corte',105],['C','Costura',190],['D','Acabado y control de calidad',75],['E','Almacén de prendas terminadas',40]],
+      rel:[['A–B','A','La tela pasa al área de corte'],['B–C','A','Las piezas cortadas pasan a costura'],['C–D','A','Las prendas cosidas pasan a acabado y control'],['D–E','A','Las prendas aprobadas pasan al almacén final'],['A–C','I','Los hilos y avíos se retiran del almacén, pero no hay una secuencia directa'],['C–E','O','La cercanía es normal'],['B–D','U','La cercanía no es relevante'],['A–E','X','Se busca evitar cruces innecesarios entre entradas y salidas']],
+      chain:['A','B','C','D','E'],supuesto:'la puerta de recepción está a la izquierda, el despacho a la derecha y hay columnas estructurales. Además, las mesas de costura están fijas por sus conexiones eléctricas.',
+      layout:[['A','B','C'],['P'],['E','D']],practNota:'Costura (C) conserva su lugar por las conexiones eléctricas y el resto se acomoda para que el flujo vaya de la recepción al despacho.'})
+  ];
+
+  /* ================= SESIÓN 13 ================= */
+  function r13(k,p){
+    var N=p.areas,L='ABCDE',tr=p.tr,dr=tr.map(function(t){return t[2]*t[3]}),tot=sum(dr),
+        np=p.prop,pr=np.map(function(x,i){return x*tr[i][3]}),tp=sum(pr),sav=tot-tp,red=sav/tot*100,
+        cd=tot*p.costo,cp=tp*p.costo,sd=cd-cp,sm=sd*p.dias;
+    var seq=tr.slice(0,4).map(function(t,i){return {n:t[0]+' → '+t[1],d:t[2]}}).sort(function(a,b){return b.d-a.d}),
+        all=tr.slice().sort(function(a,b){return b[2]-a[2]})[0];
+    var b='<p>'+p.intro+' La gerencia observa que existen recorridos largos, pérdida de tiempo y mayores costos de transporte interno. Se solicita evaluar la distribución actual y proponer mejoras.</p><p>La planta tiene las siguientes áreas:</p>'
+      +ul(L.split('').map(function(c){return c+': '+N[c]+'.'}))
+      +'<h5>2. Información de la distribución actual</h5><p>La empresa ha medido las distancias entre las diferentes áreas y la cantidad de viajes diarios de materiales.</p>'
+      +T(['Recorrido','Distancias (m)','Viajes / día'],tr.map(function(t){return [t[0]+' – '+t[1],t[2],t[3]]}),[1,2])+'<p><b>Pregunta:</b> ¿La distribución actual es eficiente?</p>'
+      +teo('evaluación de plantas existentes, etapa 1 (recopilar información): distancias entre áreas y viajes diarios. Se necesitan ambos datos porque el costo del transporte depende de cuánto se recorre y de cuántas veces.')
+      +'<h5>3. Desarrollo: cálculo de la distancia recorrida</h5><p>Utilizamos la fórmula <b>DR = D × V</b>, donde DR = distancia recorrida diaria (m), D = distancia entre áreas (m) y V = número de viajes diarios.</p>'
+      +ul([0,1,2].map(function(i){return 'Recorrido '+tr[i][0]+' → '+tr[i][1]+': DR = '+tr[i][2]+' × '+tr[i][3]+' = '+F(dr[i],0)+' m'}))+'<p>Realizamos el mismo procedimiento para los demás recorridos.</p>'
+      +teo('análisis de transportación: distancia × frecuencia de cada tramo. Se aplica a cada tramo por separado para poder ver cuáles pesan más.')
+      +'<h5>4. Resultado de la evaluación actual</h5>'+T(['Recorrido','Distancias (m)','Viajes','Distancia diaria (m)'],tr.map(function(t,i){return [t[0]+' – '+t[1],t[2],t[3],F(dr[i],0)]}),[1,2,3],['Total','','',F(tot,0)])
+      +'<p>Distancia recorrida diariamente en la distribución actual: <b>'+F(tot,0)+' m</b>, equivalente a '+F(tot/1000)+' kilómetros diarios de transporte interno.</p>'
+      +'<h5>5. Identificación de los problemas</h5><p>Después de evaluar los resultados encontramos:</p>'
+      +ul(['El recorrido '+seq[0].n+' es de '+seq[0].d+' metros.','El recorrido '+seq[1].n+' es de '+seq[1].d+' metros.','Existen movimientos innecesarios entre áreas que no siguen la secuencia de producción ('+tr[4][0]+' → '+tr[4][1]+' y '+tr[5][0]+' → '+tr[5][1]+').','El recorrido más largo es '+all[0]+' → '+all[1]+', con '+all[2]+' metros por viaje.'])
+      +'<p><b>Interpretación:</b> la empresa está perdiendo tiempo y recursos por una ubicación inadecuada de sus áreas de trabajo.</p>'
+      +teo('etapas 2 y 4 de la evaluación (analizar la distribución actual e identificar problemas): recorridos largos y movimientos fuera de secuencia. Se identifican porque son las causas que elevan la distancia y el costo.')
+      +'<h5>6. Propuesta de mejora de la distribución</h5><p>Se propone reorganizar las áreas siguiendo la secuencia del proceso productivo:</p>'+chips(p.flujo)
+      +'<p>Nueva distribución: A → B → C → D → E. Al seguir la secuencia, desaparecen los movimientos entre áreas no consecutivas.</p>'
+      +T(['Recorrido','Distancias (m)','Viajes','Distancia diaria (m)'],np.map(function(x,i){return [tr[i][0]+' – '+tr[i][1],x,tr[i][3],F(pr[i],0)]}),[1,2,3],['Total','','',F(tp,0)+' m'])
+      +teo('etapa 5 de la evaluación (proponer mejoras), con la lógica de la disposición ideal: áreas en el orden del proceso, sin retrocesos. Reduce distancias y facilita el flujo continuo.')
+      +'<h5>7. Cálculo del ahorro obtenido</h5><p>Comparamos la situación actual con la propuesta. Ahorro = DR actual − DR propuesta = '+F(tot,0)+' − '+F(tp,0)+' = <b>'+F(sav,0)+' m/día</b>.</p>'
+      +'<p>Reducción (%) = ('+F(tot,0)+' − '+F(tp,0)+') / '+F(tot,0)+' × 100 = <b>'+F(red)+' %</b>.</p>'
+      +teo('método de comparación antes y después. Se compara en metros para comprobar que la propuesta realmente mejora la distribución actual.')
+      +'<h5>8. Evaluación económica adicional</h5><p>Supongamos que el costo de transporte interno es de '+S(p.costo)+' por metro recorrido.</p>'
+      +'<p>Costo diario actual: '+F(tot,0)+' × '+F(p.costo)+' = '+S(cd)+'<br>Costo diario propuesto: '+F(tp,0)+' × '+F(p.costo)+' = '+S(cp)+'<br>Ahorro diario: '+F(cd)+' − '+F(cp)+' = '+S(sd)+'</p>'
+      +'<p>Si la fábrica trabaja '+p.dias+' días al mes: '+F(sd)+' × '+p.dias+' = <b>'+S(sm)+'</b>. La empresa podría ahorrar '+S(sm)+' mensuales, bajo el supuesto de que el costo de transporte por metro se mantiene constante.</p>'
+      +teo('objetivo de reducir costos del análisis de transportación: se convierte el ahorro de metros en soles para sustentar la inversión en el cambio.');
+    return prob('p13-'+k,k,p.titulo,b);
+  }
+  var S13=[
+    r13(1,{titulo:'Fábrica de calzado',intro:'Una empresa fabrica calzado de cuero y cuenta con cinco áreas de trabajo.',areas:{A:'Almacén de cuero',B:'Área de corte',C:'Área de aparado',D:'Área de montaje',E:'Almacén de calzado terminado'},
+      tr:[['A','B',18,12],['B','C',30,12],['C','D',38,9],['D','E',28,9],['A','D',42,3],['B','E',48,2]],prop:[9,14,12,10],costo:0.25,dias:24,flujo:['Almacén de cuero','Corte','Aparado','Montaje','Almacén de calzado terminado','Zona de despacho']}),
+    r13(2,{titulo:'Taller metalmecánico',intro:'Un taller metalmecánico fabrica estructuras metálicas y cuenta con cinco áreas de trabajo.',areas:{A:'Almacén de planchas y perfiles',B:'Área de corte',C:'Área de soldadura',D:'Área de pintura',E:'Almacén de productos terminados'},
+      tr:[['A','B',22,8],['B','C',36,8],['C','D',28,6],['D','E',40,6],['A','D',50,2],['B','E',55,1]],prop:[12,16,14,18],costo:0.2,dias:26,flujo:['Almacén de planchas','Corte','Soldadura','Pintura','Almacén de productos terminados','Zona de carga']}),
+    r13(3,{titulo:'Taller de confecciones',intro:'Un taller de confecciones fabrica prendas de vestir y cuenta con cinco áreas de trabajo.',areas:{A:'Almacén de telas',B:'Área de corte',C:'Área de costura',D:'Área de planchado y acabado',E:'Almacén de prendas terminadas'},
+      tr:[['A','B',15,20],['B','C',32,20],['C','D',25,15],['D','E',30,15],['A','D',38,4],['B','E',45,3]],prop:[8,14,10,12],costo:0.15,dias:26,flujo:['Almacén de telas','Corte','Costura','Planchado y acabado','Almacén de prendas','Zona de despacho']}),
+    r13(4,{titulo:'Panificadora industrial',intro:'Una panificadora industrial produce pan empaquetado y cuenta con cinco áreas de trabajo.',areas:{A:'Almacén de insumos',B:'Área de amasado',C:'Área de horneado',D:'Área de empaque',E:'Almacén de producto terminado'},
+      tr:[['A','B',20,14],['B','C',26,14],['C','D',34,10],['D','E',24,10],['A','D',40,3],['B','E',46,2]],prop:[10,12,14,10],costo:0.2,dias:30,flujo:['Almacén de insumos','Amasado','Horneado','Empaque','Almacén de producto terminado','Zona de carga']}),
+    r13(5,{titulo:'Fábrica de componentes plásticos',intro:'Una empresa fabrica componentes plásticos y cuenta con cinco áreas de trabajo.',areas:{A:'Almacén de resina',B:'Área de inyección',C:'Área de ensamblaje',D:'Área de control de calidad',E:'Almacén de productos terminados'},
+      tr:[['A','B',25,10],['B','C',40,10],['C','D',30,8],['D','E',35,8],['A','D',48,2],['B','E',52,2]],prop:[12,18,14,15],costo:0.3,dias:25,flujo:['Almacén de resina','Inyección','Ensamblaje','Control de calidad','Almacén de productos terminados','Zona de despacho']})
+  ];
+
+  /* ================= SESIÓN 14 ================= */
+  function r14(k,p){
+    var cm=p.costo/p.rec,ut=p.ocu/p.cap*100,lib=p.cap-p.ocu,dn=p.dan!=null?p.dan/p.rec*100:0,ex=p.cor!=null?p.cor/p.ver*100:0,rot=p.ven/p.inv,dias=30/rot,min=p.rec*p.min,hrs=min/60,
+        ac=p.costo*p.redC/100,nc=p.costo-ac,ah=hrs*p.redT/100,nh=hrs-ah;
+    var q=0,b='<p>'+p.intro+'</p><p>La gerencia proporciona la siguiente información:</p>';
+    var rows=[['Materiales recibidos al mes',F(p.rec,0)+' unidades'],['Costo de manipulación mensual',S(p.costo,0)],['Capacidad del almacén',F(p.cap,0)+' pallets'],['Espacio ocupado',F(p.ocu,0)+' pallets']];
+    if(p.dan!=null) rows.push(['Materiales dañados',F(p.dan,0)+' unidades']); if(p.cor!=null){rows.push(['Existencias verificadas',F(p.ver,0)+' unidades']);rows.push(['Existencias correctas',F(p.cor,0)+' unidades'])}
+    rows.push(['Inventario promedio',S(p.inv,0)],['Costo de ventas mensual',S(p.ven,0)],['Tiempo actual de manipulación',p.min+' minutos/unidad']);
+    b+=T(['Concepto','Datos'],rows)+'<p>La empresa desea evaluar la eficiencia de sus operaciones y determinar qué mejoras debe implementar.</p><h5>2. Desarrollo y solución paso a paso</h5>';
+    var Q={
+      cm:function(){return ['¿Cuál es el costo de manipulación por unidad?','Cm = Costo total / Unidades manipuladas','Cm = '+F(p.costo,0)+' / '+F(p.rec,0)+'<br>Cm = <b>'+S(cm)+' por unidad</b>','La empresa gasta '+S(cm)+' para manipular cada unidad de material. Este costo puede reducirse mejorando los recorridos internos y utilizando equipos adecuados.','indicador «costo de manipulación» (costo total / unidades movidas). Se calcula primero porque es el costo base que luego se busca reducir.']},
+      ut:function(){return ['¿Cuál es el porcentaje de utilización del almacén?','U = Espacio ocupado / Capacidad total × 100','U = '+F(p.ocu,0)+' / '+F(p.cap,0)+' × 100<br>U = <b>'+F(ut)+' %</b>','El almacén utiliza el '+F(ut)+' % de su capacidad. Tiene disponible el '+F(100-ut)+' %, equivalente a '+F(lib,0)+' pallets.'+(ut>=90?' Queda poco margen, y conviene mantener cierta capacidad libre para facilitar las operaciones.':''),'indicador «utilización del espacio». Mide si se aprovecha el área sin saturarla.']},
+      dn:function(){return ['¿Cuál es el porcentaje de materiales dañados?','D = Materiales dañados / Materiales recibidos × 100','D = '+F(p.dan,0)+' / '+F(p.rec,0)+' × 100<br>D = <b>'+F(dn)+' %</b>','De cada 100 unidades recibidas, '+F(dn)+' presentan daños. Esto representa pérdidas económicas y posibles interrupciones de producción.','indicador «tasa de daños». Se usa porque evitar daños es un objetivo de la manipulación.']},
+      ex:function(){return ['¿Cuál es la exactitud del inventario?','E = Existencia correcta / Existencia verificada × 100','E = '+F(p.cor,0)+' / '+F(p.ver,0)+' × 100<br>E = <b>'+F(ex)+' %</b>','El '+F(ex)+' % de las existencias verificadas es correcto. El '+F(100-ex)+' % restante presenta diferencias que deben revisarse.','indicador «exactitud del inventario». Mide qué tan confiable es el control de existencias.']},
+      rt:function(){return ['¿Cuál es la rotación mensual del inventario?','R = Costo de ventas / Inventario promedio','R = '+F(p.ven,0)+' / '+F(p.inv,0)+'<br>R = <b>'+F(rot)+' veces al mes</b>','El inventario promedio se renueva '+F(rot)+' veces al mes. Esto equivale aproximadamente a '+F(dias,0)+' días de inventario, suponiendo un consumo uniforme.','indicador «rotación de inventario» (costo de venta / inventario promedio). Indica cuántas veces se renueva el inventario en un periodo.']},
+      tm:function(){return ['¿Cuánto tiempo emplea la empresa en manipular sus materiales?','T = Unidades × Minutos por unidad','T = '+F(p.rec,0)+' × '+p.min+' = '+F(min,0)+' minutos<br>Convertimos a horas: T = '+F(min,0)+' / 60 = <b>'+F(hrs)+' horas mensuales</b>','La empresa utiliza '+F(hrs)+' horas mensuales para manipular materiales. Debe evaluar cómo reducir este tiempo.','optimización de tiempos (objetivo de la manipulación). El tiempo total depende de las unidades y del tiempo por unidad.']}
+    };
+    p.qs.forEach(function(c){var r=Q[c](); q++; b+='<p class="pq"><b>Pregunta '+q+'. '+r[0]+'</b></p><p>Fórmula: '+r[1]+'</p><p>Reemplazamos:<br>'+r[2]+'</p><p><b>Interpretación:</b> '+r[3]+'</p>'+teo(r[4])});
+    b+='<h5>3. Propuesta de mejora de la empresa</h5><p>La gerencia propone implementar:</p>'+ul(p.mej)+'<p>Se estima que estas mejoras permitirán reducir el costo de manipulación en '+p.redC+' % y el tiempo de manipulación en '+p.redT+' %.</p>'
+      +teo('equipos, tipos de almacenamiento, control de inventarios (ABC, FIFO, FEFO) y principios de seguridad de la manipulación. Cada mejora ataca un indicador: costo, tiempo, daños o espacio.');
+    q++; b+='<p class="pq"><b>Pregunta '+q+'. ¿Cuál será el nuevo costo mensual de manipulación?</b></p><p>Ahorro:<br>A = '+F(p.costo,0)+' × '+F(p.redC/100)+' = '+S(ac,0)+'<br>Nuevo costo:<br>Cm = '+F(p.costo,0)+' − '+F(ac,0)+' = <b>'+S(nc,0)+'</b></p><p><b>Interpretación:</b> La empresa ahorrará '+S(ac,0)+' mensuales.</p>'+teo('objetivo «reducir costos». Se aplica el porcentaje estimado sobre el costo actual y se resta.');
+    q++; b+='<p class="pq"><b>Pregunta '+q+'. ¿Cuánto tiempo ahorrará mensualmente?</b></p><p>Ta = '+F(hrs)+' × '+F(p.redT/100)+' = '+F(ah)+' horas<br>Nuevo tiempo: Tn = '+F(hrs)+' − '+F(ah)+' = <b>'+F(nh)+' horas</b></p><p><b>Interpretación:</b> La empresa reducirá '+F(ah)+' horas mensuales de manipulación, mejorando la productividad.</p>'+teo('objetivos «optimizar tiempos» e «incrementar la productividad». Menos horas de manipulación liberan tiempo para otras actividades.');
+    var res=[]; p.qs.forEach(function(c){ res.push({cm:['Costo de manipulación / unid.',S(cm)],ut:['Utilización de almacén',F(ut)+' %'],dn:['Materiales dañados',F(dn)+' %'],ex:['Exactitud del inventario',F(ex)+' %'],rt:['Rotación de inventario',F(rot)+' veces/mes'],tm:['Tiempo de manipulación',F(hrs)+' horas']}[c]) });
+    res.push(['Nuevo costo mensual',S(nc,0)],['Ahorro mensual',S(ac,0)],['Nuevo tiempo de manipulación',F(nh)+' horas'],['Tiempo ahorrado',F(ah)+' horas']);
+    b+='<h5>4. Resumen de resultados</h5>'+T(['Indicador','Resultado'],res)
+      +'<h5>5. Análisis gerencial del ejercicio</h5><p>¿Qué nos enseñan estos resultados?</p>'+ul([
+        '<b>Desde el punto de vista económico:</b> reducir el costo de manipulación de '+S(p.costo,0)+' a '+S(nc,0)+' mejora la rentabilidad de la empresa.',
+        '<b>Desde el punto de vista operativo:</b> pasar de '+F(hrs)+' a '+F(nh)+' horas permite entregar oportunamente los materiales.',
+        '<b>Desde el punto de vista logístico:</b> con el almacén al '+F(ut)+' %, aprovechar correctamente el espacio evita ampliaciones innecesarias.',
+        '<b>Desde el punto de vista de calidad:</b> '+(p.dan!=null?'reducir los daños (hoy '+F(dn)+' %) evita pérdidas y desperdicios.':'mantener una exactitud alta ('+F(ex)+' %) evita errores y pérdidas en el control de existencias.'),
+        '<b>Desde el punto de vista de productividad:</b> utilizar equipos apropiados y mejorar los recorridos permite realizar más actividades con los mismos recursos.']);
+    return prob('p14-'+k,k,p.titulo,b);
+  }
+  var S14=[
+    r14(1,{titulo:'Distribuidora de repuestos automotrices',intro:'Una distribuidora de repuestos automotrices presenta problemas en la manipulación y almacenamiento de sus materiales. Actualmente recibe 1,500 unidades de materiales al mes, que deben almacenarse y posteriormente trasladarse al área de despacho.',
+      rec:1500,costo:9000,cap:800,ocu:600,dan:45,inv:120000,ven:240000,min:12,redC:25,redT:35,qs:['cm','ut','dn','rt','tm'],mej:['Una mejor distribución de las áreas de almacenamiento.','Estanterías metálicas para organizar los materiales.','Transpaletas y montacargas para reducir esfuerzos.','Clasificación ABC para controlar los materiales.','Sistema FIFO para los materiales que lo requieran.','Capacitación del personal en manipulación segura.']}),
+    r14(2,{titulo:'Empresa de productos alimenticios',intro:'Una empresa de productos alimenticios presenta problemas en la manipulación y almacenamiento de sus materiales. Actualmente recibe 2,000 unidades de materiales al mes, que deben almacenarse y posteriormente trasladarse al área de producción.',
+      rec:2000,costo:8000,cap:500,ocu:450,ver:400,cor:388,inv:90000,ven:270000,min:9,redC:15,redT:40,qs:['cm','ut','ex','rt','tm'],mej:['Almacenamiento en rack para pallets, para aprovechar la altura.','Transpaletas para el desplazamiento horizontal de pallets.','Sistema FEFO para los productos con fecha de vencimiento.','Clasificación ABC para controlar los materiales.','Una mejor distribución de las áreas de almacenamiento.','Capacitación del personal en manipulación segura.']}),
+    r14(3,{titulo:'Fábrica de componentes plásticos',intro:'Una fábrica de componentes plásticos presenta problemas en la manipulación y almacenamiento de sus materias primas. Actualmente recibe 800 unidades de materiales al mes, que deben almacenarse y posteriormente trasladarse al área de producción.',
+      rec:800,costo:6400,cap:400,ocu:260,dan:16,inv:50000,ven:75000,min:18,redC:20,redT:25,qs:['cm','ut','dn','rt','tm'],mej:['Una mejor distribución de las áreas de almacenamiento.','Estanterías metálicas para organizar los materiales.','Una faja transportadora entre el almacén y producción, para el traslado continuo.','Clasificación ABC para controlar los materiales.','Sistema FIFO para los materiales que lo requieran.','Capacitación del personal en manipulación segura.']}),
+    r14(4,{titulo:'Taller de confecciones',intro:'Un taller de confecciones presenta problemas en la manipulación y almacenamiento de sus insumos. Actualmente recibe 3,000 unidades de materiales al mes, que deben almacenarse y posteriormente trasladarse al área de corte.',
+      rec:3000,costo:10500,cap:700,ocu:665,dan:90,inv:60000,ven:180000,min:6,redC:30,redT:20,qs:['cm','ut','dn','rt','tm'],mej:['Una mejor distribución de las áreas de almacenamiento.','Estanterías metálicas para organizar los materiales.','Transpaletas para reducir esfuerzos.','Clasificación ABC para controlar los materiales.','Sistema FIFO para los materiales que lo requieran.','Capacitación del personal en manipulación segura.']}),
+    r14(5,{titulo:'Fábrica de estructuras metálicas',intro:'Una fábrica de estructuras metálicas presenta problemas en la manipulación y almacenamiento de sus materias primas. Actualmente recibe 1,000 unidades de materiales al mes, que deben almacenarse y posteriormente trasladarse al área de producción.',
+      rec:1000,costo:12000,cap:500,ocu:350,ver:500,cor:475,inv:200000,ven:300000,min:30,redC:20,redT:30,qs:['cm','ut','ex','rt','tm'],mej:['Una mejor distribución de las áreas de almacenamiento.','Almacenamiento en rack para pallets.','Grúa puente y montacargas para levantar y desplazar cargas pesadas.','Clasificación ABC para controlar los materiales.','Sistema FIFO para los materiales que lo requieran.','Capacitación del personal en manipulación segura.']})
+  ];
+
+  /* ================= Render con selector ================= */
+  var G={'11':{t:'Sesión 11: recorrido, transportación y matricial',d:S11,intro:'Cinco ejemplos resueltos con el formato de las diapositivas de la sesión 11.'},
+         '12':{t:'Sesión 12: ejercicio resuelto 5',d:S12,intro:'Cinco ejercicios con los tres métodos (diagrama relacional de espacios, disposición ideal y práctica), como el ejercicio resuelto 5.'},
+         '13':{t:'Sesión 13: evaluación de una planta existente',d:S13,intro:'Cinco evaluaciones completas, de la distribución actual al ahorro en soles, como el ejercicio de la fábrica de muebles.'},
+         '14':{t:'Sesión 14: manipulación y almacenamiento',d:S14,intro:'Cinco casos con indicadores, propuesta de mejora y análisis gerencial, como el ejercicio de componentes mecánicos.'}};
+  var box=$('#pbox'), sel=$('#psel'), cur='11';
+  function show(s){
+    cur=s; $$('#psel [data-g]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.g===s?'true':'false')});
+    var g=G[s]; box.innerHTML='<p class="lead">'+g.intro+'</p><div class="chips" role="group" aria-label="Ir a un ejercicio">'+g.d.map(function(_,i){return '<button type="button" class="btn" data-j="p'+s+'-'+(i+1)+'">Ejercicio '+(i+1)+'</button>'}).join('')+'</div>'+g.d.join('');
+  }
+  sel.addEventListener('click',function(e){var b=e.target.closest('[data-g]'); if(b) show(b.dataset.g)});
+  box.addEventListener('click',function(e){var b=e.target.closest('[data-j]'); if(!b) return; var t=document.getElementById(b.dataset.j.replace(/^p/,'p')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'})});
+  show('11');
 })();
 
 </script>
