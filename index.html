@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disposición de Planta · Unidad 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Plano de planta: papel técnico, tinta azul, amarillo de señalización de piso. Pestañas por sesión, una columna de lectura. */
+:root{
+  --tagink:#fff; --bar:#16242f; --ink:#16242f; --muted:#4f626f; --paper:#f3f6f8; --panel:#ffffff; --line:#cfd8de;
+  --accent:#f2b705; --accent-ink:#2b2200; --blue:#1d5d8a; --blue-soft:#e3eef6;
+  --good:#17764a; --good-soft:#e2f3ea; --bad:#a8281f; --bad-soft:#fbe7e5; --pe:#fff4d1; --pe-line:#e4c04a;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif; --body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --tagink:#08121a; --bar:#08121a; --ink:#e7eef3; --muted:#a2b3bf; --paper:#0f1a22; --panel:#16252f; --line:#2c4150;
+    --accent:#f2b705; --accent-ink:#2b2200; --blue:#7db8e0; --blue-soft:#18334a;
+    --good:#58c58c; --good-soft:#143427; --bad:#ff8b80; --bad-soft:#3b1d1b; --pe:#352c0e; --pe-line:#7a6320;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --tagink:#08121a; --bar:#08121a; --ink:#e7eef3; --muted:#a2b3bf; --paper:#0f1a22; --panel:#16252f; --line:#2c4150;
+  --accent:#f2b705; --accent-ink:#2b2200; --blue:#7db8e0; --blue-soft:#18334a;
+  --good:#58c58c; --good-soft:#143427; --bad:#ff8b80; --bad-soft:#3b1d1b; --pe:#352c0e; --pe-line:#7a6320;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.12;margin:0;text-wrap:balance;letter-spacing:.01em}
+h2{font-size:2rem;margin:2.6rem 0 .6rem;display:flex;gap:.6rem;align-items:baseline}
+h2 .num{font:600 .95rem var(--mono);background:var(--accent);color:var(--accent-ink);padding:.15rem .5rem;border-radius:3px;position:relative;top:-.2rem}
+h3{font-size:1.4rem;margin:1.6rem 0 .5rem}
+h4{font-size:1.1rem;margin:1rem 0 .3rem;color:var(--blue)}
+p{margin:.5rem 0}
+ul,ol{margin:.4rem 0;padding-left:1.3rem}
+li{margin:.2rem 0}
+strong{font-weight:600}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:960px;margin:0 auto;padding:0 18px}
+
+/* Cabecera */
+header.top{background:var(--bar);color:#f3f6f8;border-bottom:6px solid transparent;border-image:repeating-linear-gradient(135deg,#f2b705 0 14px,#16242f 14px 28px) 6}
+header.top .wrap{padding:26px 18px 22px}
+.eyebrow{font:500 .8rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#f2b705}
+header.top h1{font-size:clamp(2.2rem,6vw,3.6rem);margin:.2rem 0 .3rem}
+header.top p{margin:0;color:#c3d0d8;max-width:60ch}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-top:8px;padding-bottom:0}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--muted);font:600 1.05rem var(--display);letter-spacing:.03em;padding:.5rem .9rem;border-bottom:4px solid transparent;white-space:nowrap}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+main{padding-bottom:70px}
+section.tab{display:none}
+section.tab.on{display:block}
+
+/* Bloques */
+.lead{font-size:1.15rem;max-width:62ch}
+.logro{background:var(--blue-soft);border-left:5px solid var(--blue);padding:.8rem 1rem;border-radius:0 6px 6px 0;margin:1rem 0}
+.logro b{font-family:var(--display);font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;color:var(--blue)}
+.simple,.pe,.warn,.res,.cls{border-radius:6px;padding:.75rem 1rem;margin:.8rem 0}
+.simple{background:var(--good-soft);border:1px solid var(--good)}
+.pe{background:var(--pe);border:1px solid var(--pe-line)}
+.warn{background:var(--bad-soft);border:1px solid var(--bad)}
+.res{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--blue)}
+.tag{display:inline-block;font:600 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:.08rem .45rem;border-radius:3px;margin-right:.4rem;vertical-align:.08em}
+.simple .tag{background:var(--good);color:var(--tagink)}
+.pe .tag{background:var(--accent);color:var(--accent-ink)}
+.warn .tag{background:var(--bad);color:var(--tagink)}
+.res .tag{background:var(--blue);color:var(--tagink)}
+.def{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:.8rem 1rem;margin:.6rem 0}
+.def .k{font:600 .75rem var(--mono);color:var(--blue);letter-spacing:.07em;text-transform:uppercase;display:block;margin-bottom:.15rem}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:.8rem 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:.8rem 1rem}
+.card h4{margin-top:0}
+.card p{margin:.2rem 0;font-size:.97rem}
+.cards-num .card{border-top:4px solid var(--accent)}
+.ses-card{display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:1rem;border-top:6px solid var(--accent)}
+.ses-card:hover{border-color:var(--blue)}
+.ses-card .n{font:600 .8rem var(--mono);color:var(--muted)}
+.ses-card h3{margin:.2rem 0 .4rem;font-size:1.35rem}
+.ses-card p{font-size:.95rem;color:var(--muted);margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:.4rem 0}
+.chip{background:var(--blue-soft);color:var(--ink);border:1px solid var(--line);border-radius:99px;padding:.15rem .7rem;font-size:.9rem}
+
+/* Tablas */
+.tw{overflow-x:auto;margin:.7rem 0;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{padding:.5rem .7rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .82rem var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--paper)}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tfoot td{font-weight:600;background:var(--paper)}
+.code{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:4px;font:600 1rem var(--mono);color:#fff}
+.cA{background:#b3261e}.cE{background:#c4560a}.cI{background:#c79a00;color:#201800}.cO{background:#1d5d8a}.cU{background:#6b7b86}.cX{background:#5b3a29}
+
+/* Calculadoras */
+.calc{background:var(--panel);border:2px solid var(--ink);border-radius:8px;margin:1rem 0;overflow:hidden}
+.calc>.hd{background:var(--bar);border-bottom:2px solid var(--accent);color:#f3f6f8;padding:.45rem .9rem;font:600 1.05rem var(--display);letter-spacing:.04em;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.calc>.hd span{font:500 .75rem var(--mono);color:#f2b705;letter-spacing:.06em;text-transform:uppercase;align-self:center}
+.calc .bd{padding:.9rem}
+.calc input[type=number]{width:5.4rem;font:500 1rem var(--mono);padding:.3rem .4rem;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);text-align:right}
+.calc input[type=number]:focus{border-color:var(--blue)}
+.calc select{font:inherit;padding:.3rem;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.calc button,.btn{font:600 .95rem var(--body);padding:.4rem .8rem;border-radius:5px;border:1px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer}
+.calc button:hover,.btn:hover{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.calc button[aria-pressed="true"]{background:var(--bar);color:#fff}
+.out{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:.8rem}
+.out>div{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:.5rem .7rem}
+.out small{display:block;font:500 .72rem var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.out b{font:700 1.5rem var(--display);font-variant-numeric:tabular-nums}
+.out .hi{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.out .hi small{color:var(--accent-ink)}
+.hint{font-size:.88rem;color:var(--muted);margin:.5rem 0 0}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:.3rem 0 .6rem}
+.node{background:var(--bar);color:#fff;border-radius:5px;padding:.4rem .7rem;font:600 1rem var(--display);letter-spacing:.03em}
+.leg{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:.9rem}
+.leg:before{content:"";width:22px;border-top:3px dashed var(--accent)}
+.leg:after{content:"▶";color:var(--accent);font-size:.8rem}
+.rowlab{min-width:11rem}
+.pairs{margin-top:.8rem;display:grid;gap:6px}
+.pair{display:grid;grid-template-columns:5.5rem 1fr 3rem;gap:8px;align-items:center;font-size:.95rem}
+.pair .bar{height:14px;border-radius:3px;background:var(--line);overflow:hidden}
+.pair .bar i{display:block;height:100%;background:var(--blue)}
+.pair.top .bar i{background:var(--accent)}
+.pair.top{font-weight:600}
+.mx{border-collapse:separate;border-spacing:3px;width:auto}
+.mx th,.mx td{text-align:center;padding:.3rem;border:0}
+.mx td input{width:3.6rem}
+.mx .diag{background:var(--line);border-radius:4px}
+
+/* Espacios y planos */
+.blocks{display:flex;gap:4px;min-height:84px;margin:.6rem 0}
+.blk{background:var(--blue-soft);border:2px solid var(--blue);border-radius:4px;padding:.35rem .5rem;font-size:.85rem;line-height:1.25;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.blk b{font:700 1.05rem var(--display)}
+.blk.pas{background:repeating-linear-gradient(135deg,transparent 0 8px,var(--line) 8px 10px);border-style:dashed;border-color:var(--muted)}
+.plan{display:grid;gap:4px;margin:.6rem 0;grid-template-columns:repeat(6,1fr);max-width:640px}
+.plan .blk{min-height:70px}
+.mapa{list-style:none;padding:0;margin:.6rem 0}
+.mapa .root{background:var(--bar);color:#fff;border-radius:6px;padding:.5rem .8rem;font:600 1.1rem var(--display);text-align:center}
+.mapa ul{list-style:none;padding:0;margin:.5rem 0}
+.mapa .lvl{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.mapa .lvl>div{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:5px;padding:.5rem .7rem;font-size:.92rem}
+.mapa .lvl>div b{display:block;font:700 1rem var(--display);color:var(--blue)}
+.mapa .arrow{text-align:center;color:var(--accent);font-size:1.3rem;line-height:1}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.steps li{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:.6rem .8rem .6rem 2.9rem;position:relative;margin:0}
+.steps li:before{content:counter(s);position:absolute;left:.6rem;top:.55rem;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 1rem var(--mono)}
+.steps li b{display:block;font:700 1.05rem var(--display);color:var(--blue)}
+.steps li span{font-size:.92rem;color:var(--muted)}
+details{background:var(--panel);border:1px solid var(--line);border-radius:6px;margin:.5rem 0;padding:.5rem .9rem}
+details summary{cursor:pointer;font-weight:600}
+details[open] summary{margin-bottom:.4rem}
+.q{font-weight:600}
+.lots td,.lots th{padding:.4rem .6rem}
+.lots tr.go td{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.ord{display:inline-grid;place-items:center;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--bar);color:#fff;font:600 .85rem var(--mono)}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+@media (max-width:560px){h2{font-size:1.65rem;flex-wrap:wrap}.pair{grid-template-columns:4.2rem 1fr 2.6rem}.rowlab{min-width:7rem}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Ejercicios y cuestionarios */
+.exs{margin-top:2.4rem;border-top:6px solid var(--accent);padding-top:.2rem}
+.exh2{margin-top:1.2rem}
+.exbar{position:sticky;top:46px;z-index:3;display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:.4rem .8rem;margin:.8rem 0}
+.exbar .btn{margin-left:auto}
+.exlist{display:grid;gap:12px}
+.ex{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem}
+.exh{display:flex;gap:8px;align-items:center;margin-bottom:.3rem}
+.exn{display:inline-grid;place-items:center;min-width:1.8rem;height:1.8rem;border-radius:4px;background:var(--bar);color:#fff;font:600 .9rem var(--mono)}
+.qq{margin:.3rem 0 .6rem;font-weight:500}
+.opts{display:grid;gap:8px;margin:.4rem 0}
+.opt{display:flex;gap:.6rem;align-items:flex-start;border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:.5rem .75rem;cursor:pointer}
+.opt:hover{border-color:var(--blue)}
+.opt input{margin-top:.35rem;accent-color:var(--blue)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.numin{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.numin input{width:9rem;font:500 1rem var(--mono);padding:.4rem .5rem;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);text-align:right}
+.numin input.okin{border-color:var(--good);background:var(--good-soft)}
+.numin input.noin{border-color:var(--bad);background:var(--bad-soft)}
+.unit{font:500 .9rem var(--mono);color:var(--muted)}
+.exa{margin:.6rem 0 0;display:flex;gap:8px;flex-wrap:wrap}
+.btn.go{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn[aria-pressed="true"]{background:var(--bar);color:#fff;border-color:var(--bar)}
+.feed{margin-top:.6rem;border-radius:6px;padding:.6rem .8rem;border:1px solid var(--line)}
+.feed.ok{background:var(--good-soft);border-color:var(--good)}
+.feed.no{background:var(--bad-soft);border-color:var(--bad)}
+.feed.warnf{background:var(--pe);border-color:var(--pe-line)}
+.feed .why{margin-top:.4rem;padding-top:.4rem;border-top:1px dashed var(--line);font-size:.95rem}
+.qtop{display:flex;justify-content:space-between;gap:10px;font:500 .95rem var(--mono);color:var(--muted);margin-bottom:.4rem}
+.prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:.8rem}
+.prog i{display:block;height:100%;background:var(--accent)}
+.testbox{max-width:760px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">UTP · Ingeniería Industrial · Unidad 3: Distribución de planta</div>
+    <h1>Disposición de Planta</h1>
+    <p>Guía de estudio de las sesiones 11 a 14 del curso del Ing. Fermín Salazar Samillan, con cada concepto explicado en simple y ejemplos de la realidad peruana.</p>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <a href="#inicio">Inicio</a>
+    <a href="#sesion-11">Sesión 11</a>
+    <a href="#sesion-12">Sesión 12</a>
+    <a href="#sesion-13">Sesión 13</a>
+    <a href="#sesion-14">Sesión 14</a>
+    <a href="#test">Opción múltiple</a>
+    <a href="#vf">Verdadero o falso</a>
+    <a href="#formulas">Fórmulas y revisión</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ===================== INICIO ===================== -->
+<section class="tab" id="inicio">
+  <h2>La unidad en una idea</h2>
+  <p class="lead">Una fábrica gana o pierde plata según <strong>dónde está cada cosa</strong> y <strong>cuánto se mueve el material</strong> para ir de una zona a otra. Toda la unidad enseña a medir eso, a diseñar algo mejor y a comprobar que de verdad mejoró.</p>
+
+  <div class="grid">
+    <a class="ses-card" href="#sesion-11"><div class="n">SESIÓN 11</div><h3>Medir cómo se mueve el material</h3><p>Distribución de detalle, análisis de recorrido, diagramas de recorrido y multiproducto, transportación y análisis matricial.</p></a>
+    <a class="ses-card" href="#sesion-12"><div class="n">SESIÓN 12</div><h3>Decidir qué va cerca de qué</h3><p>Distribución general, tabla relacional (A, E, I, O, U, X), diagramas relacionales, disposición ideal y práctica.</p></a>
+    <a class="ses-card" href="#sesion-13"><div class="n">SESIÓN 13</div><h3>Evaluar una planta que ya existe</h3><p>Métodos y pasos para detectar problemas y comparar el antes y el después, con ahorro en metros y en soles.</p></a>
+    <a class="ses-card" href="#sesion-14"><div class="n">SESIÓN 14</div><h3>Mover y guardar materiales</h3><p>Manipulación, equipos, almacenamiento, FIFO, LIFO, FEFO, clasificación ABC e indicadores.</p></a>
+  </div>
+
+  <h3>Cómo se conectan</h3>
+  <ol class="steps">
+    <li><b>Medir</b><span>Sesión 11: cuántos metros y cuántos viajes hay hoy.</span></li>
+    <li><b>Diseñar</b><span>Sesión 12: qué áreas deben ir pegadas y cuánto espacio necesita cada una.</span></li>
+    <li><b>Comprobar</b><span>Sesión 13: comparar la planta actual con la propuesta, en metros y en soles.</span></li>
+    <li><b>Operar</b><span>Sesión 14: con qué equipos se mueve y cómo se ordena el almacén.</span></li>
+  </ol>
+
+  <h3>Cómo leer esta guía</h3>
+  <div class="simple"><span class="tag">En simple</span>Explicación con palabras de todos los días.</div>
+  <div class="pe"><span class="tag">En Perú</span>Ejemplo cercano que armé yo para entender la idea. No está en las diapositivas.</div>
+  <div class="res"><span class="tag">De la clase</span>Ejercicio o dato tal como aparece en las diapositivas. Las calculadoras vienen con los datos de la clase y puedes cambiarlos.</div>
+  <p>Al final de cada sesión hay ejercicios con corrección. Después tienes 60 preguntas de opción múltiple y 34 de verdadero o falso.</p>
+  <p class="hint">Las diapositivas traen dos pequeños errores y algunos datos ambiguos. Están listados en la pestaña «Fórmulas y revisión».</p>
+</section>
+
+<!-- ===================== SESIÓN 11 ===================== -->
+<section class="tab" id="sesion-11">
+  <h2><span class="num">S11</span>Distribución de detalle y análisis de recorrido</h2>
+  <div class="logro"><b>Logro de la sesión</b><br>Analizar seis métodos (distribución de detalle, análisis de recorrido, diagrama de recorrido sencillo, diagrama multiproducto, análisis de transportación y análisis matricial) para proponer mejoras que reduzcan recorridos, tiempos y costos.</div>
+  <div class="simple"><span class="tag">En simple</span>Si el material camina menos, la fábrica gasta menos. Estos seis métodos sirven para ver, medir y acortar ese camino.</div>
+
+  <h3>1. Distribución de detalle</h3>
+  <div class="def"><span class="k">Definición</span>Organizar y ubicar máquinas, equipos, herramientas, materiales y puestos de trabajo dentro de un área, para aprovechar el espacio, facilitar las operaciones y reducir desplazamientos, tiempos y costos.</div>
+  <div class="simple"><span class="tag">En simple</span>Decidir dónde se pone cada cosa dentro de la sala, para que nadie camine de más.</div>
+  <h4>Objetivos principales</h4>
+  <div class="chips"><span class="chip">Aprovechar el espacio</span><span class="chip">Reducir movimiento de materiales y personas</span><span class="chip">Evitar cruces, retrocesos y congestión</span><span class="chip">Mejorar seguridad y ergonomía</span><span class="chip">Subir productividad, bajar costos</span><span class="chip">Facilitar la supervisión</span></div>
+  <div class="res"><span class="tag">De la clase</span><b>Ejemplo 1.</b> Una empresa de componentes metálicos tiene el almacén de materia prima lejos de las máquinas de corte, y estas lejos de soldadura y acabado. La distribución de detalle reordena todo para que el material avance en orden. Propuesta: <b>Almacén de materia prima → Corte → Soldadura y ensamblaje → Acabado y control de calidad → Almacén de producto terminado.</b> Así bajan las distancias y se ven los posibles cuellos de botella.</div>
+  <div class="pe"><span class="tag">En Perú</span>Una panadería en San Juan de Lurigancho: harina, amasadora, horno y mostrador. Si el horno queda al fondo y el mostrador en la puerta, el panadero cruza el local con bandejas calientes todo el día. Con la distribución de detalle se ordenan en el mismo sentido en que se hace el pan.</div>
+
+  <h3>2. Análisis de recorrido</h3>
+  <div class="def"><span class="k">Definición</span>Técnica de estudio de métodos que representa y evalúa el desplazamiento de materiales, personas, herramientas o documentos entre áreas. Sirve para conocer cómo se hace realmente un proceso, medir las distancias e identificar movimientos innecesarios, retrocesos y cruces.</div>
+  <div class="simple"><span class="tag">En simple</span>Es contar los metros que recorre algo desde que entra hasta que sale. Lo que no se mide no se puede mejorar.</div>
+  <h4>¿Para qué sirve?</h4>
+  <ul><li>Determinar la distancia total recorrida durante un proceso.</li><li>Identificar actividades que no agregan valor.</li><li>Detectar recorridos repetitivos y cruces de flujo.</li><li>Comparar la distribución actual con una mejorada.</li><li>Proponer cambios para reducir tiempos, costos y riesgos.</li></ul>
+  <div class="pe"><span class="tag">En Perú</span>Taller de confecciones en Gamarra: tela en el almacén, corte, costura, plancha y empaque. Si la costura está un piso arriba, cada lote sube y baja escaleras. Se mide cada tramo en metros y se suma.</div>
+  <div class="calc" data-calc="route" data-nodes="Almacén|Corte|Torneado|Soldadura|Almacén de producto terminado" data-d="20,35,25,40" data-rep="15" data-replabel="Ciclos (lotes) por día" data-imp="75" data-title="Ejercicio resuelto: recorrido de piezas metálicas"></div>
+  <div class="res"><span class="tag">De la clase</span>La suma da <b>120 m por ciclo</b>. La diapositiva dice que se recorren <b>1,8 km diarios</b> con un ciclo por lote: eso equivale a 15 ciclos al día (dato que se deduce, no está escrito). Con una distribución que baja a 75 m, la reducción es <b>(120 − 75) / 120 × 100 = 37,5 %</b>.</div>
+  <div class="warn"><span class="tag">Ojo</span>Menos metros no siempre significa mejor. Antes de dar por buena la mejora hay que revisar también los tiempos de transporte, la manipulación, la seguridad y el costo de hacer el cambio.</div>
+
+  <h3>3. Diagrama de recorrido sencillo</h3>
+  <div class="def"><span class="k">Definición</span>Representación gráfica del desplazamiento de materiales, personas o productos dentro de una planta, para identificar recorridos innecesarios y reducir distancias, tiempos y costos.</div>
+  <div class="simple"><span class="tag">En simple</span>Es dibujar sobre el plano las flechas por donde pasa el material, con los metros de cada tramo.</div>
+  <h4>Elementos principales</h4>
+  <div class="grid cards-num">
+    <div class="card"><h4>Plano de la planta</h4><p>Dónde está cada área.</p></div>
+    <div class="card"><h4>Áreas u operaciones</h4><p>Almacén, corte, ensamblaje, inspección, despacho.</p></div>
+    <div class="card"><h4>Líneas o flechas</h4><p>Muestran el recorrido y el sentido.</p></div>
+    <div class="card"><h4>Distancias</h4><p>Los metros recorridos entre áreas.</p></div>
+    <div class="card"><h4>Origen y destino</h4><p>Dónde empieza y termina el proceso analizado.</p></div>
+  </div>
+  <div class="pe"><span class="tag">En Perú</span>Dibuja el plano de una bodega de barrio y traza la ruta de una caja de gaseosa: puerta de descarga, depósito, refrigeradora, mostrador. Cada flecha lleva sus metros.</div>
+  <div class="calc" data-calc="route" data-nodes="A. Almacén|B. Corte|C. Mecanizado|D. Control de calidad" data-d="20,30,15" data-rep="40" data-replabel="Piezas por día" data-imp="45" data-title="Ejercicio resuelto: fabricación de una pieza metálica"></div>
+  <div class="res"><span class="tag">De la clase</span>DT = 20 + 30 + 15 = <b>65 m por pieza</b>. Con 40 piezas al día: 65 × 40 = <b>2 600 m = 2,6 km diarios</b>. Si se reorganiza y el recorrido baja a 45 m, el ahorro es de 20 m por pieza, o sea <b>30,77 %</b>. Ese número sirve para sustentar técnicamente la propuesta.</div>
+
+  <h3>4. Diagrama multiproducto</h3>
+  <div class="def"><span class="k">Definición</span>Herramienta gráfica que compara las operaciones de varios productos para identificar sus rutas de fabricación y mejorar la distribución de las áreas.</div>
+  <div class="simple"><span class="tag">En simple</span>Cuando la fábrica hace varios productos, cada uno pasa por máquinas distintas en distinto orden. Este cuadro muestra qué rutas coinciden para poner cerca las áreas que todos usan.</div>
+  <h4>¿Para qué sirve?</h4>
+  <ul><li>Identificar operaciones comunes entre productos.</li><li>Comparar las rutas de fabricación.</li><li>Decidir qué áreas deben ir próximas.</li><li>Reducir recorridos, tiempos de producción y costos de manipulación.</li><li>Planificar una distribución más eficiente.</li></ul>
+  <div class="calc" data-calc="multi"></div>
+  <div class="pe"><span class="tag">En Perú</span>Una panadería hace pan francés, keke y empanadas. Los tres usan el horno y el empaque, pero solo la empanada pasa por «relleno». Con este cuadro se ve que el horno debe quedar al centro.</div>
+
+  <h3>5. Análisis de transportación</h3>
+  <div class="def"><span class="k">Definición</span>Procedimiento sistemático que estudia el desplazamiento de materiales, productos, herramientas o equipos entre áreas. <b>Objetivo:</b> saber qué se transporta, desde dónde, hacia dónde, en qué cantidad, a qué distancia y con qué costo, para encontrar alternativas que mejoren el flujo interno.</div>
+  <div class="simple"><span class="tag">En simple</span>Ya no solo cuántos metros: ahora se multiplica por cuántos viajes se hacen. Un tramo corto con muchísimos viajes puede pesar más que uno largo que casi no se usa.</div>
+  <h4>Variables principales</h4>
+  <div class="tw"><table><thead><tr><th>Variable</th><th>Significado</th></tr></thead><tbody>
+    <tr><td><b>Flujo (Fij)</b></td><td>Cantidad transportada desde el área i hasta el área j</td></tr>
+    <tr><td><b>Distancia (Dij)</b></td><td>Recorrido entre dos áreas</td></tr>
+    <tr><td><b>Costo unitario (Cij)</b></td><td>Costo de transportar una unidad por unidad de distancia</td></tr>
+    <tr><td><b>Frecuencia</b></td><td>Número de desplazamientos en un periodo</td></tr>
+    <tr><td><b>Medio de transporte</b></td><td>Carretilla, montacargas, transportador, etc.</td></tr></tbody></table></div>
+  <p>Fórmula de la clase: <b>D<sub>T</sub> = Σ (F<sub>i</sub> × D<sub>i</sub>)</b>, la suma de viajes por distancia de cada tramo.</p>
+  <div class="pe"><span class="tag">En Perú</span>Molino de arroz en Lambayeque: los sacos van de recepción al secado, al pilado y al empaque en carretilla. Si el secado queda a 30 m y se hacen 10 viajes al día, son 300 m solo en ese tramo. Con el costo por metro se ve cuánto cuesta caminar.</div>
+  <div class="calc" data-calc="flow" data-a="Almacén → Corte|10|20;Corte → Ensamble|8|30;Ensamble → Pintura|6|25" data-imp="430" data-title="Ejercicio resuelto: tres áreas con viajes por día"></div>
+  <div class="res"><span class="tag">De la clase</span>200 + 240 + 150 = <b>590 m/día</b>. Si al reorganizar las áreas baja a 430 m/día: (590 − 430) / 590 × 100 = <b>27,12 %</b> menos distancia recorrida, lo que puede reducir tiempo de transporte y costos.</div>
+
+  <h3>6. Análisis matricial</h3>
+  <div class="def"><span class="k">Definición</span>Herramienta que organiza en filas y columnas los flujos y relaciones entre áreas, para mejorar la distribución y reducir distancias y costos de transporte.</div>
+  <div class="simple"><span class="tag">En simple</span>Una tabla tipo «de dónde a dónde». Las <b>filas</b> son el origen y las <b>columnas</b> el destino. Sumas los dos sentidos de cada par: el par con más movimiento va más cerca.</div>
+  <div class="pe"><span class="tag">En Perú</span>Una bodega grande: cuántas veces al día se lleva mercadería del almacén al mostrador, del mostrador a la refrigeradora, etc. El par con más viajes se coloca pegado.</div>
+  <div class="calc" data-calc="matrix"></div>
+  <div class="res"><span class="tag">De la clase</span>Con la matriz de 3 áreas (A almacén, B producción, C ensamble): A→B = 20 y B→A = 2, o sea <b>22 movimientos/día</b> entre A y B. Entre B y C: 15 + 3 = <b>18</b>. Conviene evaluar primero acercar Almacén y Producción, luego Producción y Ensamble, considerando también el espacio y la seguridad. Los movimientos son <b>asimétricos</b>: no siempre se va y se vuelve la misma cantidad de veces.</div>
+
+  <h3>Cuadro comparativo de los 6 métodos</h3>
+  <div class="tw"><table><thead><tr><th>Método</th><th>¿Qué analiza?</th><th>¿Para qué sirve?</th></tr></thead><tbody>
+    <tr><td>1. Distribución de detalle</td><td>Ubicación de máquinas, equipos y puestos de trabajo</td><td>Aprovechar mejor el espacio y facilitar las operaciones</td></tr>
+    <tr><td>2. Análisis de recorrido</td><td>Desplazamientos de materiales y personas</td><td>Identificar recorridos innecesarios y reducir distancias</td></tr>
+    <tr><td>3. Diagrama de recorrido sencillo</td><td>Ruta de desplazamiento sobre el plano</td><td>Visualizar el camino de materiales o personas</td></tr>
+    <tr><td>4. Diagrama multiproducto</td><td>Operaciones y rutas de varios productos</td><td>Comparar procesos e identificar operaciones comunes</td></tr>
+    <tr><td>5. Análisis de transportación</td><td>Cantidad transportada, distancias y costos</td><td>Reducir tiempo y costo del transporte interno</td></tr>
+    <tr><td>6. Análisis matricial</td><td>Relaciones y flujos entre áreas en filas y columnas</td><td>Identificar qué áreas conviene ubicar cerca</td></tr></tbody></table></div>
+  <div class="simple"><span class="tag">Para recordar</span><b>Detalle:</b> dónde colocar los equipos. <b>Recorrido:</b> cómo se desplazan los materiales. <b>Recorrido sencillo:</b> por dónde pasan. <b>Multiproducto:</b> qué rutas siguen varios productos. <b>Transportación:</b> cuánto cuesta moverlos. <b>Matricial:</b> qué relación hay entre áreas.</div>
+
+  <h3>Práctica</h3>
+  <p class="q">1. En una fábrica los materiales recorren largas distancias entre almacén, corte, ensamble y pintura. ¿Qué métodos usarían para identificar el problema y mejorar la distribución?</p>
+  <details><summary>Ver una respuesta posible</summary>Primero el <b>análisis de recorrido</b> y el <b>diagrama de recorrido sencillo</b> para medir y ver los metros y los cruces. Luego el <b>análisis de transportación</b> para saber cuánto cuesta (viajes × distancia). El <b>análisis matricial</b> dice qué pares de áreas se mueven más y deben ir juntos, y la <b>distribución de detalle</b> reubica máquinas y puestos con esa información.</details>
+  <p class="q">2. Tres áreas: A Almacén, B Corte, C Pintura. Movimientos diarios: A→B 12, A→C 8, B→A 4, B→C 18, C→A 2, C→B 6. Arma la matriz de flujo y decide qué áreas ubicar cerca.</p>
+  <details><summary>Ver solución</summary>Matriz (filas = origen): A: 0, 12, 8. B: 4, 0, 18. C: 2, 6, 0. Pares: A–B = 12 + 4 = <b>16</b>, A–C = 8 + 2 = <b>10</b>, B–C = 18 + 6 = <b>24</b>. Conviene ubicar primero Corte y Pintura, luego Almacén y Corte. Puedes cargar esta matriz en la calculadora de arriba con el botón «Práctica».</details>
+  <p class="q">Cierre: ¿cuál es el objetivo de una buena distribución de planta?</p>
+  <details><summary>Ver respuesta</summary>Que materiales y productos tengan recorridos más cortos, menos movimientos innecesarios y menores costos de transporte, para un proceso más rápido, ordenado y eficiente.</details>
+  <div class="exs" data-ses="11"></div>
+</section>
+
+<!-- ===================== SESIÓN 12 ===================== -->
+<section class="tab" id="sesion-12">
+  <h2><span class="num">S12</span>Distribución general, tabla relacional, ideal y práctica</h2>
+  <div class="logro"><b>Logro de la sesión</b><br>Aplicar seis métodos: distribución general, tabla relacional, diagrama relacional de actividades, diagrama relacional de espacios, disposición ideal y disposición práctica, en un ejercicio de una empresa industrial.</div>
+  <div class="simple"><span class="tag">En simple</span>Es como armar una casa: primero ves qué cuartos van juntos, luego cuánto mide cada uno, después dibujas la casa soñada y al final la adaptas al terreno real.</div>
+
+  <h3>1. Distribución de planta general</h3>
+  <div class="def"><span class="k">Definición</span>Organización física de las áreas de una empresa en un espacio determinado, considerando la ubicación de máquinas, almacenes, talleres, oficinas y zonas de circulación. <b>Objetivo:</b> facilitar el flujo de materiales, personas e información, aprovechando el espacio y reduciendo costos operativos.</div>
+  <div class="res"><span class="tag">De la clase</span>Planta de piezas metálicas: Almacén de materia prima → Corte → Mecanizado → Soldadura → Inspección → Almacén de productos terminados. Las piezas deben avanzar sin retrocesos innecesarios. <b>Importancia:</b> mejora la productividad, la seguridad y el aprovechamiento del espacio.</div>
+  <div class="pe"><span class="tag">En Perú</span>Una pollería: almacén, cocina, parrillas, comedor, caja y baños. La distribución general decide cómo se reparten dentro del local, dejando pasillos para que los mozos circulen.</div>
+
+  <h3>2. Tabla relacional de actividades</h3>
+  <div class="def"><span class="k">Definición</span>Tabla que establece el grado de cercanía deseable entre las áreas de una planta, según la necesidad de comunicación, el flujo de materiales, la supervisión y otros factores. Se usa para decidir qué áreas deben estar cerca y cuáles pueden estar lejos.</div>
+  <h4>Grados de proximidad</h4>
+  <div class="tw"><table><thead><tr><th>Código</th><th>Significado</th><th>Interpretación</th></tr></thead><tbody>
+    <tr><td><span class="code cA">A</span></td><td>Absolutamente necesario</td><td>Deben estar muy próximos</td></tr>
+    <tr><td><span class="code cE">E</span></td><td>Especialmente importante</td><td>Es muy conveniente su cercanía</td></tr>
+    <tr><td><span class="code cI">I</span></td><td>Importante</td><td>Es necesario que estén cerca</td></tr>
+    <tr><td><span class="code cO">O</span></td><td>Cercanía ordinaria</td><td>La cercanía es normal</td></tr>
+    <tr><td><span class="code cU">U</span></td><td>Sin importancia</td><td>La cercanía no es relevante</td></tr>
+    <tr><td><span class="code cX">X</span></td><td>No deseable</td><td>Conviene mantenerlas separadas</td></tr></tbody></table></div>
+  <div class="simple"><span class="tag">Para recordar</span>Las letras van de «pégalas» (A) a «sepáralas» (X). Palabras en inglés de la sigla: <b>A</b>bsolutely, <b>E</b>specially, <b>I</b>mportant, <b>O</b>rdinary, <b>U</b>nimportant, <b>X</b> (no).</div>
+  <div class="res"><span class="tag">De la clase</span><b>Ejemplo con 4 áreas</b> (A almacén de materia prima, B corte, C mecanizado, D oficina administrativa):
+    <ul><li>Almacén–Corte: <b>A</b>. El material se traslada con frecuencia.</li><li>Corte–Mecanizado: <b>A</b>. Hay secuencia directa de producción.</li><li>Almacén–Oficina: <b>O</b>. La cercanía no es indispensable.</li><li>Corte–Oficina: <b>X</b>. El ruido y los riesgos justifican separarlas.</li></ul>
+    La tabla transforma las necesidades operativas en criterios concretos para ubicar cada área.</div>
+  <div class="calc" data-calc="quiz"></div>
+
+  <h3>3. Diagrama relacional de recorrido o actividades</h3>
+  <div class="def"><span class="k">Definición</span>Representación gráfica de las relaciones de proximidad entre áreas. Usa líneas y símbolos para mostrar cuáles deben estar próximas y cuáles separadas.</div>
+  <p>Conviene distinguir dos dibujos parecidos:</p>
+  <div class="grid">
+    <div class="card"><h4>Diagrama relacional de actividades</h4><p>Muestra <b>qué tanto necesitan estar cerca</b> las áreas, según la tabla relacional.</p></div>
+    <div class="card"><h4>Diagrama de recorrido</h4><p>Dibuja sobre el plano el <b>camino real</b> que siguen materiales, productos o personas.</p></div>
+  </div>
+  <div class="res"><span class="tag">De la clase</span>Para una planta: <b>Almacén de materia prima</b> —A— <b>Corte</b> —A— <b>Mecanizado</b> → Inspección y producto terminado. Es la secuencia lógica de operaciones. En un proyecto real se usan las relaciones entre <b>todas</b> las áreas, no solo las consecutivas, y la distribución final considera seguridad, espacio, equipos y circulación. Sirve de base para armar alternativas de distribución física.</div>
+  <div class="flow"><div class="node">Almacén MP</div><div class="leg">A</div><div class="node">Corte</div><div class="leg">A</div><div class="node">Mecanizado</div><div class="leg">→</div><div class="node">Inspección y PT</div></div>
+
+  <h3>4. Diagrama relacional de espacios</h3>
+  <div class="def"><span class="k">Definición</span>Representación gráfica de las áreas que incorpora el <b>espacio requerido</b> por cada una y las relaciones de cercanía. A diferencia del diagrama de actividades (solo cercanía), este también considera el <b>tamaño</b>.</div>
+  <div class="chips"><span class="chip">Determinar cuánto espacio necesita cada área</span><span class="chip">Representar las relaciones de proximidad</span><span class="chip">Facilitar la planificación de la distribución</span></div>
+  <div class="simple"><span class="tag">En simple</span>Es el mismo dibujo de «quién va junto a quién», pero ahora cada caja tiene el tamaño que le corresponde.</div>
+  <div class="res"><span class="tag">De la clase</span><b>Ejercicio 3.</b> Tres áreas: almacén de materia prima 100 m², producción 200 m², almacén de productos terminados 80 m². Total: <b>380 m²</b>. Producción debe estar próxima a ambos almacenes para mover materiales y productos.
+    <div class="blocks" aria-label="Tamaños proporcionales"><div class="blk" style="flex:100"><span>Almacén MP</span><b>100 m²</b></div><div class="blk" style="flex:200"><span>Producción</span><b>200 m²</b></div><div class="blk" style="flex:80"><span>Almacén PT</span><b>80 m²</b></div></div>
+    <span class="hint">Cada caja es proporcional a su superficie.</span></div>
+  <div class="warn"><span class="tag">Ojo</span>La diapositiva escribe el total como «3,800». La suma correcta es 100 + 200 + 80 = 380.</div>
+  <div class="pe"><span class="tag">En Perú</span>Vas a armar una bodega en un local de 40 m². La zona de ventas pide 18 m², el depósito 12 m² y el espacio de la refrigeradora y pasillo 10 m². Antes de comprar estantes ya sabes si todo cabe.</div>
+
+  <h3>5. Disposición ideal</h3>
+  <div class="def"><span class="k">Definición</span>Distribución teórica de las áreas que busca la mejor organización posible, <b>sin considerar al inicio</b> las limitaciones físicas, económicas o estructurales. Se diseña con las relaciones de proximidad, el flujo de materiales, las dimensiones requeridas y la eficiencia.</div>
+  <div class="res"><span class="tag">De la clase</span>Ejemplo: Almacén de materia prima → Corte → Mecanizado → Inspección → Almacén de productos terminados. El producto avanza en orden y sin retrocesos. Características: prioriza la eficiencia, reduce distancias, permite flujo continuo y aprovecha el espacio. Sirve como <b>modelo de referencia</b>.</div>
+
+  <h3>6. Disposición práctica</h3>
+  <div class="def"><span class="k">Definición</span>Distribución que <b>sí se puede implementar</b>, considerando las condiciones existentes, los recursos disponibles y las restricciones técnicas y económicas. Se adapta a la instalación concreta.</div>
+  <div class="res"><span class="tag">De la clase</span><b>Ejercicio 4.</b> La ideal pide Corte junto a Mecanizado, pero la planta tiene columnas, máquinas instaladas y poco espacio. La empresa se acerca al diseño ideal sin comprometer la seguridad ni gastar de más. Factores:
+    <ul><li>Dimensiones reales del edificio.</li><li>Ubicación de columnas, paredes y accesos.</li><li>Máquinas e instalaciones existentes.</li><li>Presupuesto disponible.</li><li>Seguridad y circulación del personal.</li><li>Posibilidad de futuras ampliaciones.</li></ul>Convierte el diseño teórico en uno viable, seguro y económicamente conveniente.</div>
+  <div class="pe"><span class="tag">En Perú</span>Dibujas en papel la casa perfecta (ideal). Luego te toca un lote en Carabayllo con 8 m de frente, un poste de luz en medio y una pendiente (práctica). La casa final se parece a la ideal, pero respeta el terreno y el presupuesto.</div>
+
+  <h3>Ejercicio resuelto 5: los tres métodos juntos</h3>
+  <div class="res"><span class="tag">De la clase</span>Empresa de piezas metálicas con un local de <b>500 m²</b> y cuatro áreas. El espacio sobrante se reserva inicialmente para pasillos y circulación, y hay que comprobar si alcanza para la seguridad y el transporte interno.</div>
+  <div class="calc" data-calc="space" data-rows="A. Almacén de materia prima|80;B. Área de corte|120;C. Área de mecanizado|180;D. Almacén de productos terminados|70" data-local="500"></div>
+
+  <h4>Método 1: diagrama relacional de espacios</h4>
+  <p>Objetivo: saber qué áreas van próximas y cuánto espacio necesita cada una.</p>
+  <div class="tw"><table><thead><tr><th>Relación</th><th>Código</th><th>Justificación</th></tr></thead><tbody>
+    <tr><td>A–B</td><td><span class="code cA">A</span></td><td>La materia prima pasa al área de corte</td></tr>
+    <tr><td>B–C</td><td><span class="code cA">A</span></td><td>Las piezas cortadas pasan a mecanizado</td></tr>
+    <tr><td>C–D</td><td><span class="code cA">A</span></td><td>Las piezas terminadas pasan al almacén final</td></tr>
+    <tr><td>A–C</td><td><span class="code cI">I</span></td><td>Hay movimiento de materiales, pero no directo</td></tr>
+    <tr><td>A–D</td><td><span class="code cX">X</span></td><td>Se evitan cruces innecesarios entre entradas y salidas</td></tr></tbody></table></div>
+  <p><b>Resultado:</b> se identifica la secuencia de áreas que deben estar próximas (esquema conceptual, no a escala).</p>
+
+  <h4>Método 2: disposición ideal</h4>
+  <p>Se supone que el local permite una secuencia continua, sin restricciones del edificio.</p>
+  <div class="blocks" aria-label="Disposición ideal"><div class="blk" style="flex:80"><span>A. Materia prima</span><b>80 m²</b></div><div class="blk" style="flex:120"><span>B. Corte</span><b>120 m²</b></div><div class="blk" style="flex:180"><span>C. Mecanizado</span><b>180 m²</b></div><div class="blk" style="flex:70"><span>D. Prod. terminado</span><b>70 m²</b></div></div>
+  <p><b>Resultado:</b> un modelo eficiente que evita retrocesos, reduce distancias, facilita el control y mantiene la secuencia lógica de fabricación. Sirve de referencia para el diseño real.</p>
+
+  <h4>Método 3: disposición práctica</h4>
+  <p>Se adapta la ideal al local real: puerta de recepción a la izquierda, puerta de despacho a la derecha y columnas estructurales en el centro.</p>
+  <div class="plan" aria-label="Alternativa práctica, esquema ilustrativo">
+    <div class="blk" style="grid-column:1/4"><span>A. Almacén</span><b>80 m²</b></div>
+    <div class="blk" style="grid-column:4/7"><span>D. Producto terminado</span><b>70 m²</b></div>
+    <div class="blk" style="grid-column:1/4"><span>B. Corte</span><b>120 m²</b></div>
+    <div class="blk" style="grid-column:4/7;grid-row:2/4"><span>C. Mecanizado</span><b>180 m²</b></div>
+    <div class="blk pas" style="grid-column:1/4"><span>Pasillos y circulación</span><b>50 m²</b></div>
+  </div>
+  <p class="hint">Esquema ilustrativo parecido al de la diapositiva; antes de ejecutarlo hay que verificar distancias, relaciones de proximidad y seguridad.</p>
+  <p>Comprobación del espacio: 80 + 120 + 180 + 70 = 450 m², y 500 − 450 = <b>50 m</b> restantes. Si bastan o no depende de los equipos, los pasillos, las salidas de emergencia y el manejo de materiales. También hay que revisar que el orden de corte, mecanizado y almacenamiento no cause recorridos excesivos.</p>
+
+  <h4>Comparación de resultados</h4>
+  <div class="tw"><table><thead><tr><th>Método</th><th>Resultado</th></tr></thead><tbody>
+    <tr><td>Diagrama relacional de espacios</td><td>Identifica áreas, superficies y proximidades necesarias</td></tr>
+    <tr><td>Disposición ideal</td><td>Propone una secuencia eficiente de producción</td></tr>
+    <tr><td>Disposición práctica</td><td>Adapta la propuesta a las condiciones reales del edificio</td></tr></tbody></table></div>
+
+  <h3>Diferencia entre los 6 métodos</h3>
+  <div class="tw"><table><thead><tr><th>N.º</th><th>Método</th><th>¿Qué analiza?</th><th>¿Para qué sirve?</th></tr></thead><tbody>
+    <tr><td>1</td><td>Distribución general</td><td>Ubicación global de las áreas de la planta</td><td>Organizar las áreas dentro del local</td></tr>
+    <tr><td>2</td><td>Tabla relacional</td><td>Grado de cercanía necesario entre áreas (A, E, I, O, U, X)</td><td>Determinar qué áreas deben estar cerca o separadas</td></tr>
+    <tr><td>3</td><td>Diagrama relacional de actividades</td><td>Relaciones entre actividades o departamentos</td><td>Representar gráficamente las necesidades de proximidad</td></tr>
+    <tr><td>4</td><td>Diagrama relacional de espacios</td><td>Relaciones entre áreas y superficies requeridas</td><td>Considerar la cercanía y el tamaño de cada área</td></tr>
+    <tr><td>5</td><td>Disposición ideal</td><td>Organización óptima deseada, sin restricciones reales iniciales</td><td>Proponer la distribución más eficiente como referencia</td></tr>
+    <tr><td>6</td><td>Disposición práctica</td><td>Limitaciones reales del edificio, presupuesto, equipos y seguridad</td><td>Diseñar una distribución que pueda implementarse</td></tr></tbody></table></div>
+
+  <h3>Práctica</h3>
+  <p class="q">1. Una fábrica tiene almacén de materia prima, corte y mecanizado. ¿Qué áreas deben estar cerca? ¿Qué significan A, E, I, O, U, X?</p>
+  <details><summary>Ver respuesta</summary>Se usa la <b>tabla relacional</b>. Almacén–Corte y Corte–Mecanizado llevan <b>A</b> (secuencia directa); Almacén–Mecanizado puede ser <b>I</b> (hay movimiento, pero no directo). Códigos: A absolutamente necesario, E especialmente importante, I importante, O cercanía ordinaria, U sin importancia, X no deseable.</details>
+  <p class="q">2. ¿Por qué es importante organizar las áreas de una empresa?</p>
+  <details><summary>Ver respuesta</summary>Porque mejora el flujo de materiales, personas e información, aprovecha el espacio, reduce recorridos y costos, y aumenta la productividad y la seguridad.</details>
+  <p class="q">Cierre: si una fábrica tiene suficiente espacio, pero sus trabajadores recorren grandes distancias para trasladar materiales, ¿qué debe mejorar?</p>
+  <details><summary>Ver respuesta</summary>Su <b>distribución de planta</b>: acercar las áreas que se relacionan más, siguiendo la secuencia del proceso. El problema no es la cantidad de espacio sino cómo está ordenado.</details>
+  <div class="exs" data-ses="12"></div>
+</section>
+
+<!-- ===================== SESIÓN 13 ===================== -->
+<section class="tab" id="sesion-13">
+  <h2><span class="num">S13</span>Evaluación de distribución de plantas existentes</h2>
+  <div class="logro"><b>Logro de la sesión</b><br>Analizar la distribución de una planta industrial existente, identificar problemas en la ubicación de máquinas y áreas, y proponer mejoras que reduzcan recorridos y aumenten la productividad.</div>
+  <div class="simple"><span class="tag">En simple</span>Es el chequeo médico de una fábrica que ya funciona: se mide cómo está, se detecta qué falla, se propone un tratamiento y se comprueba que mejoró. Una fábrica puede producir más sin comprar máquinas nuevas, solo ordenando mejor.</div>
+
+  <h3>¿Qué es?</h3>
+  <div class="def"><span class="k">Definición</span>Proceso que analiza cómo están organizadas las áreas de una empresa (producción, almacenes, oficinas, máquinas, equipos y zonas de trabajo). <b>Objetivo:</b> comprobar si la distribución actual permite operar con eficiencia o si hay problemas que afectan el desempeño.</div>
+  <ol class="steps">
+    <li><b>Estudiar</b><span>Recorrido de materiales, productos y trabajadores; uso del espacio; ubicación de máquinas; relación entre áreas.</span></li>
+    <li><b>Identificar deficiencias</b><span>Recorridos largos, cruces, esperas, congestión, espacio desperdiciado o riesgos de seguridad.</span></li>
+    <li><b>Proponer mejoras</b><span>Optimizar el flujo, reducir costos y aumentar la productividad.</span></li>
+  </ol>
+
+  <h3>Objetivos de la evaluación</h3>
+  <div class="grid cards-num">
+    <div class="card"><h4>Reducir costos</h4><p>Menos gasto de transporte interno.</p></div>
+    <div class="card"><h4>Optimizar espacios</h4><p>Aprovechar bien el área disponible.</p></div>
+    <div class="card"><h4>Reducir tiempos</h4><p>Evitar desplazamientos innecesarios.</p></div>
+    <div class="card"><h4>Mejorar productividad</h4><p>Facilitar el trabajo de operarios y máquinas.</p></div>
+    <div class="card"><h4>Mejorar seguridad</h4><p>Evitar cruces peligrosos entre personas, equipos y materiales.</p></div>
+    <div class="card"><h4>Mejorar el flujo</h4><p>Que el material avance en orden desde la materia prima hasta el producto terminado.</p></div>
+  </div>
+
+  <h3>Ocho métodos para evaluar</h3>
+  <div class="grid">
+    <div class="card"><h4>1. Observación directa</h4><p>Recorrer la planta y mirar cómo se trabaja. Detecta recorridos innecesarios, congestión, esperas, espacios desaprovechados y riesgos.</p></div>
+    <div class="card"><h4>2. Análisis de recorrido</h4><p>Estudia el trayecto de materiales, productos o trabajadores. Meta: reducir distancias, eliminar movimientos innecesarios y mejorar el flujo.</p></div>
+    <div class="card"><h4>3. Diagrama de recorrido</h4><p>Dibuja ese camino sobre el plano. Muestra cruces, retrocesos, recorridos largos y áreas con más circulación.</p></div>
+    <div class="card"><h4>4. Tabla relacional</h4><p>Dice qué áreas deben estar cerca o lejos según cuánto interactúan. Meta: ubicar juntas las que trabajan en conjunto.</p></div>
+    <div class="card"><h4>5. Diagrama relacional de actividades</h4><p>Muestra gráficamente la relación entre áreas. Meta: una distribución que facilite el flujo de trabajo.</p></div>
+    <div class="card"><h4>6. Análisis de transportación</h4><p>Evalúa el movimiento interno según distancias, frecuencia, costos y medios de transporte. Meta: bajar el costo del manejo de materiales.</p></div>
+    <div class="card"><h4>7. Análisis de materiales</h4><p>Estudia cómo se reciben, almacenan, trasladan y usan los materiales. Meta: evitar desperdicios y mejorar el flujo.</p></div>
+    <div class="card"><h4>8. Comparación antes y después</h4><p>Pone al lado la distribución actual y la propuesta, con indicadores: distancia recorrida, tiempo de producción, costos y productividad.</p></div>
+  </div>
+
+  <h3>Qué se debe evaluar</h3>
+  <div class="tw"><table><thead><tr><th>Aspecto</th><th>Pregunta clave</th></tr></thead><tbody>
+    <tr><td>Ubicación de máquinas</td><td>¿Están correctamente distribuidas?</td></tr>
+    <tr><td>Flujo de materiales</td><td>¿Hay un recorrido ordenado?</td></tr>
+    <tr><td>Distancias</td><td>¿Los desplazamientos son cortos?</td></tr>
+    <tr><td>Espacio disponible</td><td>¿Se aprovecha bien el área?</td></tr>
+    <tr><td>Almacenes</td><td>¿Están cerca de las áreas que los necesitan?</td></tr>
+    <tr><td>Seguridad</td><td>¿Hay pasillos libres y zonas seguras?</td></tr></tbody></table></div>
+
+  <h3>Cómo se evalúa: seis etapas</h3>
+  <ol class="steps">
+    <li><b>Recopilar información</b><span>Plano, procesos de producción, ubicación de máquinas, recorridos, tiempos y costos.</span></li>
+    <li><b>Analizar la distribución actual</b><span>Recorridos largos, cruces, congestión, espacios desaprovechados, riesgos.</span></li>
+    <li><b>Usar herramientas</b><span>Diagrama de recorrido, tabla relacional, diagrama relacional, transportación, análisis de materiales.</span></li>
+    <li><b>Identificar problemas</b><span>Exceso de movimientos, esperas, transporte innecesario, mala ubicación de máquinas o almacenes.</span></li>
+    <li><b>Proponer mejoras</b><span>Reducir recorridos, mejorar el flujo, aprovechar el espacio, bajar costos, subir seguridad y productividad.</span></li>
+    <li><b>Comparar resultados</b><span>Menor distancia, menor tiempo, menos costos, mayor eficiencia.</span></li>
+  </ol>
+
+  <h3>Mapa conceptual</h3>
+  <ul class="mapa">
+    <li class="root">Evaluación de la distribución de las plantas existentes</li>
+    <li class="arrow">▼</li>
+    <li><div class="lvl">
+      <div><b>¿Qué es?</b>Analiza la distribución actual de la planta para verificar su eficiencia.</div>
+      <div><b>¿Para qué sirve?</b>Detectar problemas, reducir recorridos, disminuir costos, mejorar el flujo, aprovechar el espacio y aumentar la productividad.</div>
+      <div><b>¿Cómo se evalúa?</b>Recopilar información, analizar la distribución, aplicar herramientas, identificar problemas, proponer mejoras y comparar resultados.</div></div></li>
+    <li class="arrow">▼</li>
+    <li><div class="lvl"><div><b>Herramientas</b>Diagrama de recorrido · Tabla relacional y diagrama relacional · Análisis de transportación · Análisis de materiales</div></div></li>
+    <li class="arrow">▼</li>
+    <li><div class="lvl"><div><b>Resultados esperados</b>Menores recorridos · Menores costos · Mejor uso del espacio</div></div></li>
+    <li class="arrow">▼</li>
+    <li class="root">Mayor eficiencia, seguridad y productividad</li>
+  </ul>
+
+  <h3>Ejercicio resuelto: fábrica de muebles de madera</h3>
+  <div class="res"><span class="tag">De la clase</span>La gerencia ve recorridos largos, pérdida de tiempo y mayores costos de transporte interno. Áreas: <b>A</b> almacén de materia prima, <b>B</b> corte, <b>C</b> ensamblaje, <b>D</b> pintura, <b>E</b> almacén de productos terminados. Pregunta: ¿la distribución actual es eficiente?</div>
+  <div class="pe"><span class="tag">En Perú</span>Es el caso típico de una carpintería en el parque industrial de Villa El Salvador: la madera llega por un lado, el taller de pintura queda en la otra esquina del galpón y el almacén de muebles terminados junto a la puerta de la calle, así que los muebles cruzan todo el taller.</div>
+  <p>Fórmula: <b>DR = D × V</b> (distancia recorrida diaria = distancia entre áreas × viajes por día). Ejemplo: A → B = 20 × 10 = 200 m.</p>
+  <div class="calc" data-calc="flow" data-a="A – B|20|10;B – C|35|10;C – D|40|8;D – E|30|8;A – D|45|2;B – E|50|2" data-b="A – B|10|10;B – C|15|10;C – D|15|8;D – E|10|8" data-cost="0.20" data-days="26" data-title="Distribución actual vs. propuesta"></div>
+  <div class="res"><span class="tag">De la clase</span><b>Actual:</b> 1 300 m/día (1,3 km). <b>Problemas:</b> B → C de 35 m, C → D de 40 m y B → E de 50 m (el más largo), además de movimientos entre áreas que no siguen la secuencia de producción. <b>Propuesta:</b> ordenar A → B → C → D → E siguiendo el proceso: 100 + 150 + 120 + 80 = <b>450 m/día</b>. Ahorro: 1 300 − 450 = <b>850 m/día</b>, o sea <b>65,38 %</b>. Con un costo de S/ 0,20 por metro: S/ 260 contra S/ 90 por día, S/ 170 de ahorro diario y <b>S/ 4 420 al mes</b> trabajando 26 días (si el costo por metro se mantiene).</div>
+  <p>Propuesta de la clase para el flujo: Corte y dimensionado → Cepillado y lijado → Mecanizado de componentes → Ensamblaje de subconjuntos → Pintura → Montaje final → Producto terminado → Zona de carga.</p>
+
+  <h3>Práctica</h3>
+  <p class="q">1. Una fábrica de mesas tiene este recorrido: Almacén–Corte 20 m, Corte–Ensamblaje 25 m, Ensamblaje–Pintura 30 m, Pintura–Producto terminado 15 m. Evalúa la distancia y las acciones de mejora (la diapositiva termina con «60 m»).</p>
+  <details><summary>Ver solución (mi interpretación del «60 m»)</summary>Distancia actual: 20 + 25 + 30 + 15 = <b>90 m</b> por ciclo. Si el «60 m» es la meta de la mejora, el ahorro es 30 m y la reducción 30 / 90 × 100 = <b>33,33 %</b>. Acciones: acercar las áreas siguiendo la secuencia del proceso, eliminar retrocesos y cruces, y usar el análisis de transportación para ver cuántos viajes hace cada tramo. Puedes probar los números en la calculadora de recorrido de la Sesión 11.</details>
+  <p class="q">2. ¿Por qué es importante reducir las distancias entre las áreas de producción?</p>
+  <details><summary>Ver respuesta</summary>Menos metros recorridos significan menos tiempo de transporte, menos costo (se paga por metro y por viaje), menos esfuerzo y menos riesgo de cruces, además de un flujo más ordenado.</details>
+  <p class="q">Cierre: si fueras responsable de una fábrica y vieras que los trabajadores caminan demasiado para trasladar materiales, ¿qué solución propondrías?</p>
+  <details><summary>Ver respuesta posible</summary>Medir los recorridos (análisis y diagrama de recorrido), calcular el costo con transportación, reubicar las áreas según la secuencia de producción o la tabla relacional, y comparar antes y después en distancia, tiempo y costo.</details>
+  <div class="exs" data-ses="13"></div>
+</section>
+
+<!-- ===================== SESIÓN 14 ===================== -->
+<section class="tab" id="sesion-14">
+  <h2><span class="num">S14</span>Manipulación y almacenamiento de materiales</h2>
+  <div class="logro"><b>Logro de la sesión</b><br>Analizar los procesos de manipulación y almacenamiento de materiales, con métodos y ejercicios prácticos, para optimizar recursos, reducir costos y tiempos, y mejorar la productividad y la seguridad.</div>
+  <div class="simple"><span class="tag">En simple</span>Una empresa eficiente no solo produce bien: también sabe recibir, mover, guardar y entregar sus materiales al menor costo posible.</div>
+
+  <h3>1. Manipulación de materiales</h3>
+  <div class="def"><span class="k">Definición</span>Conjunto de actividades, métodos, equipos y procedimientos para mover, levantar, transportar, posicionar, proteger y controlar materias primas, productos en proceso y productos terminados. <b>Finalidad:</b> llevar los materiales del punto de recepción al punto de uso o despacho reduciendo costos, tiempos, esfuerzo físico y riesgos laborales.</div>
+  <div class="res"><span class="tag">De la clase</span>En una fábrica de motores, ejes, engranajes, rodamientos y carcasas viajan del almacén a las estaciones de ensamblaje con carretillas, montacargas, transportadores y sistemas de almacenamiento.</div>
+  <div class="pe"><span class="tag">En Perú</span>Una agroexportadora en Ica: las cajas de arándanos o uvas salen del empaque en pallets, un montacargas las lleva a la cámara de frío y de ahí al camión rumbo al puerto del Callao. Cada traslado extra cuesta plata y puede dañar la fruta.</div>
+
+  <h3>2. Objetivos</h3>
+  <div class="chips"><span class="chip">Reducir costos</span><span class="chip">Optimizar tiempos</span><span class="chip">Subir la productividad</span><span class="chip">Mejorar la seguridad</span><span class="chip">Aprovechar los espacios</span><span class="chip">Evitar daños</span><span class="chip">Mejorar el flujo de producción</span></div>
+
+  <h3>3. Principios de la manipulación</h3>
+  <p>Son criterios técnicos para diseñar un sistema eficiente.</p>
+  <div class="tw"><table><thead><tr><th>Principio</th><th>Explicación</th></tr></thead><tbody>
+    <tr><td><b>Planificación</b></td><td>Organizar anticipadamente los movimientos</td></tr>
+    <tr><td><b>Minimización</b></td><td>Reducir la cantidad de movimientos</td></tr>
+    <tr><td><b>Flujo continuo</b></td><td>Evitar interrupciones y acumulaciones</td></tr>
+    <tr><td><b>Aprovechamiento del espacio</b></td><td>Usar bien las áreas y las alturas</td></tr>
+    <tr><td><b>Seguridad</b></td><td>Proteger al trabajador y los materiales</td></tr>
+    <tr><td><b>Estandarización</b></td><td>Usar métodos y equipos uniformes</td></tr>
+    <tr><td><b>Automatización</b></td><td>Incorporar tecnología</td></tr>
+    <tr><td><b>Ergonomía</b></td><td>Adaptar el trabajo a las capacidades humanas</td></tr></tbody></table></div>
+  <div class="simple"><span class="tag">En simple</span>Ejemplo de la clase: si una materia prima se traslada cinco veces antes de usarse, hay que revisar la distribución de planta para reducir esos movimientos. Cada vez que algo se mueve sin transformarse, se paga sin ganar.</div>
+
+  <h3>4. Equipos de manipulación</h3>
+  <p>Se eligen según peso, volumen, distancia, frecuencia de movimiento y características del material.</p>
+  <div class="grid cards-num">
+    <div class="card"><h4>Montacargas</h4><p>Levanta, transporta y apila cargas pesadas sobre pallets.</p></div>
+    <div class="card"><h4>Fajas transportadoras</h4><p>Trasladan materiales de forma continua entre operaciones.</p></div>
+    <div class="card"><h4>Transpaletas</h4><p>Desplazan pallets en horizontal.</p></div>
+    <div class="card"><h4>Grúas puente</h4><p>Levantan y mueven cargas pesadas dentro de la nave industrial.</p></div>
+    <div class="card"><h4>Vehículos AGV</h4><p>Transportan materiales automáticamente siguiendo rutas programadas.</p></div>
+  </div>
+  <div class="pe"><span class="tag">En Perú</span>La transpaleta es la «carretilla hidráulica» del almacén de una distribuidora; el montacargas se ve en los almacenes del Callao y de la agroexportación; la grúa puente, en talleres de fundición y de metalmecánica.</div>
+
+  <h3>5. Almacenamiento de materiales</h3>
+  <div class="def"><span class="k">Definición</span>Proceso de recibir, clasificar, ubicar, conservar, controlar y proteger materias primas, productos en proceso, repuestos y productos terminados durante un periodo. <b>Finalidad:</b> que los materiales estén disponibles en la cantidad, calidad y momento que pide la producción o el servicio.</div>
+  <div class="res"><span class="tag">De la clase</span>Una empresa de transporte interprovincial guarda filtros de aceite, lubricantes, rodamientos, pastillas de freno y neumáticos para dar mantenimiento oportuno a sus buses.</div>
+  <h4>Tipos de almacenamiento</h4>
+  <div class="tw"><table><thead><tr><th>Tipo</th><th>Características</th><th>Ejemplo</th></tr></thead><tbody>
+    <tr><td>En estanterías</td><td>Estructuras metálicas</td><td>Repuestos pequeños</td></tr>
+    <tr><td>En rack para pallets</td><td>Permite almacenar carga en altura</td><td>Cajas y productos paletizados</td></tr>
+    <tr><td>A granel</td><td>Materiales sin empaque</td><td>Arena y granos</td></tr>
+    <tr><td>En silos</td><td>Almacenamiento vertical cerrado</td><td>Cemento y cereales</td></tr>
+    <tr><td>En depósitos</td><td>Controla condiciones especiales</td><td>Productos químicos</td></tr>
+    <tr><td>Automatizado</td><td>Usa sistemas tecnológicos</td><td>Almacenes tecnológicos</td></tr></tbody></table></div>
+
+  <h3>6. Control de inventarios</h3>
+  <p>Determina cómo se administran las entradas, salidas y existencias.</p>
+  <div class="grid">
+    <div class="card"><h4>FIFO · First In, First Out</h4><p>Primero en entrar, primero en salir. Si ingresan lubricantes en enero y febrero, se despachan primero los de enero.</p></div>
+    <div class="card"><h4>LIFO · Last In, First Out</h4><p>Último en entrar, primero en salir. Sirve como modelo de flujo físico en ciertos casos, pero la clase indica que <b>no está permitido por las NIIF</b> (Normas Internacionales de Información Financiera) para valorizar inventarios.</p></div>
+    <div class="card"><h4>FEFO · First Expired, First Out</h4><p>Primero en vencer, primero en salir. Se usa en productos con fecha de vencimiento, como alimentos y medicamentos.</p></div>
+  </div>
+  <div class="calc" data-calc="fifo"></div>
+  <div class="pe"><span class="tag">En Perú</span>En una botica, los medicamentos se ordenan por fecha de vencimiento (FEFO). En una ferretería, el cemento y los fierros se controlan con FIFO. En el almacén de una distribuidora de lácteos, el yogurt que vence antes sale primero aunque haya llegado después.</div>
+
+  <h4>Clasificación ABC</h4>
+  <p>Clasifica los materiales según su importancia económica o su valor de consumo anual.</p>
+  <div class="tw"><table><thead><tr><th>Categoría</th><th>Característica</th><th>Control</th></tr></thead><tbody>
+    <tr><td><span class="code cA">A</span></td><td>Mayor valor económico acumulado</td><td>Estricto y frecuente</td></tr>
+    <tr><td><span class="code cO">B</span></td><td>Valor intermedio</td><td>Moderado</td></tr>
+    <tr><td><span class="code cU">C</span></td><td>Menor valor económico</td><td>Simplificado</td></tr></tbody></table></div>
+  <div class="pe"><span class="tag">En Perú</span>En una ferretería, los fierros y el cemento son pocos productos que concentran gran parte de la plata: categoría A, se cuentan seguido. Los clavos, tarugos y lijas son muchos productos de poco valor: categoría C, se revisan de vez en cuando.</div>
+
+  <h3>7. Indicadores de eficiencia (KPI)</h3>
+  <div class="tw"><table><thead><tr><th>Indicador</th><th>Fórmula de la clase</th></tr></thead><tbody>
+    <tr><td>Exactitud del inventario</td><td>Existencia correcta / Existencia verificada × 100</td></tr>
+    <tr><td>Utilización del espacio</td><td>Espacio ocupado / Espacio disponible × 100</td></tr>
+    <tr><td>Costo de manipulación</td><td>Costo total de manipulación / Unidades movidas</td></tr>
+    <tr><td>Tiempo de despacho</td><td>Hora de salida / Hora de solicitud (ver nota en «Fórmulas y revisión»)</td></tr>
+    <tr><td>Rotación de inventario</td><td>Costo de venta / Inventario promedio</td></tr>
+    <tr><td>Tasa de daños</td><td>Materiales dañados / Materiales manipulados × 100</td></tr></tbody></table></div>
+  <div class="simple"><span class="tag">En simple</span>Si el costo de manipulación sube, hay que investigar si se debe a recorridos excesivos, equipos inadecuados, movimientos innecesarios o mala distribución de planta.</div>
+
+  <h3>Ejercicio resuelto: fabricante de componentes mecánicos</h3>
+  <div class="res"><span class="tag">De la clase</span>Una empresa recibe 1 200 unidades al mes que debe almacenar y llevar a producción. Datos y las mejoras estimadas por la gerencia ya están cargados abajo; cambia cualquier número y todo se recalcula.</div>
+  <div class="calc" data-calc="kpi"></div>
+  <div class="res"><span class="tag">De la clase</span><b>Mejoras propuestas:</b> mejor distribución de las áreas de almacenamiento, estanterías metálicas, transpaletas y montacargas, clasificación ABC, sistema FIFO donde corresponda y capacitación en manipulación segura. <b>Resultados:</b> S/ 6 por unidad, almacén al 80 % (quedan 120 pallets libres), 2 % de daños, rotación de 2 veces al mes (unos 15 días de inventario), 300 horas de manipulación. Con la mejora: costo mensual S/ 5 760 (ahorro S/ 1 440) y 210 horas (ahorro de 90 horas).</div>
+  <h4>¿Qué enseñan estos resultados?</h4>
+  <ul><li><b>Económico:</b> menor costo de manipulación significa mayor rentabilidad.</li><li><b>Operativo:</b> menos tiempo permite entregar a producción a tiempo.</li><li><b>Logístico:</b> usar bien el espacio evita ampliar el almacén sin necesidad.</li><li><b>Calidad:</b> menos daños evitan pérdidas y desperdicios.</li><li><b>Productividad:</b> equipos adecuados y mejores recorridos permiten hacer más con los mismos recursos.</li></ul>
+
+  <h3>Práctica</h3>
+  <p class="q">1. ¿Por qué una mala manipulación de materiales incrementa los costos de producción?</p>
+  <details><summary>Ver respuesta</summary>Porque agrega traslados innecesarios, tiempo de espera y esfuerzo, daña materiales (pérdidas), provoca accidentes y obliga a usar más personal y equipos para lo mismo.</details>
+  <p class="q">2. Un almacén tiene capacidad para 600 pallets. ¿Conviene mantener cierta capacidad libre para facilitar las operaciones?</p>
+  <details><summary>Ver respuesta</summary>Sí. Un almacén al 100 % no deja espacio para maniobrar, recibir mercadería nueva ni mover pallets con seguridad. En el ejercicio, el 80 % de uso deja 120 pallets libres como margen de trabajo.</details>
+  <p class="q">Cierre: ¿cómo influye la distribución de planta en el tiempo de manipulación?</p>
+  <details><summary>Ver respuesta</summary>Cuanto más lejos están las áreas y más cruces hay, más viajes largos y más tiempo de manipulación. Una buena distribución acorta recorridos, reduce ese tiempo y baja el costo. Una adecuada manipulación y almacenamiento hace a la empresa más eficiente, productiva, segura y competitiva.</details>
+  <div class="exs" data-ses="14"></div>
+</section>
+
+<!-- ===================== FÓRMULAS ===================== -->
+<section class="tab" id="formulas">
+  <h2>Fórmulas de toda la unidad</h2>
+  <div class="tw"><table><thead><tr><th>Qué calculas</th><th>Fórmula</th><th>Sesión</th></tr></thead><tbody>
+    <tr><td>Distancia por ciclo</td><td>DT = suma de las distancias de cada tramo</td><td>11</td></tr>
+    <tr><td>Distancia diaria (recorrido sencillo)</td><td>D diaria = DT × piezas (o ciclos) por día</td><td>11</td></tr>
+    <tr><td>Reducción porcentual</td><td>(anterior − nueva) / anterior × 100</td><td>11, 13</td></tr>
+    <tr><td>Transportación</td><td>DT = Σ (Fi × Di), viajes × distancia por tramo</td><td>11</td></tr>
+    <tr><td>Movimiento entre un par de áreas</td><td>Mij + Mji (suma de los dos sentidos)</td><td>11</td></tr>
+    <tr><td>Espacio restante</td><td>Área del local − suma de áreas requeridas</td><td>12</td></tr>
+    <tr><td>Distancia recorrida diaria por tramo</td><td>DR = D × V</td><td>13</td></tr>
+    <tr><td>Ahorro</td><td>DR actual − DR propuesta</td><td>13</td></tr>
+    <tr><td>Costo diario y mensual</td><td>metros por día × costo por metro; luego × días trabajados</td><td>13</td></tr>
+    <tr><td>Costo de manipulación por unidad</td><td>Costo total / unidades manipuladas</td><td>14</td></tr>
+    <tr><td>Utilización del almacén</td><td>Espacio ocupado / Capacidad total × 100</td><td>14</td></tr>
+    <tr><td>Materiales dañados</td><td>Dañados / Recibidos × 100</td><td>14</td></tr>
+    <tr><td>Rotación del inventario</td><td>Costo de ventas / Inventario promedio</td><td>14</td></tr>
+    <tr><td>Tiempo de manipulación</td><td>Unidades × minutos por unidad, entre 60 para pasar a horas</td><td>14</td></tr>
+    <tr><td>Ahorro con una mejora porcentual</td><td>Valor actual × porcentaje; nuevo valor = actual − ahorro</td><td>14</td></tr>
+  </tbody></table></div>
+
+  <h2>Qué revisar en las diapositivas</h2>
+  <div class="warn"><span class="tag">Error</span><b>Sesión 12, ejercicio 3:</b> el total de espacios figura como «3,800». La suma correcta es 100 + 200 + 80 = <b>380 m²</b>.</div>
+  <div class="warn"><span class="tag">Error</span><b>Sesión 14, indicador «Tiempo de despacho»:</b> aparece como Hora de salida / Hora de solicitud. Un tiempo se calcula con una resta (hora de salida − hora de solicitud), no con una división. Si en tu examen aparece la fórmula del profesor, usa la de la clase, pero conviene saber que lo lógico es restar.</div>
+  <div class="pe"><span class="tag">Dato deducido</span><b>Sesión 11, análisis de recorrido:</b> la diapositiva dice «1,8 km diarios» sin indicar cuántos ciclos son. Con 120 m por ciclo salen <b>15 ciclos al día</b> (120 × 15 = 1 800 m). Es un dato que se deduce, no está escrito.</div>
+  <div class="pe"><span class="tag">Ambiguo</span><b>Sesión 13, práctica 1:</b> termina con «60 m» sin explicar qué es. En esta guía lo interpreté como la meta de recorrido tras la mejora (de 90 m a 60 m, 33,33 %). Si en clase lo explicaron distinto, usa esa versión.</div>
+  <div class="simple"><span class="tag">Ojo con esto</span><b>Sesión 11, matriz de 4 áreas:</b> el mayor movimiento en un solo sentido es Almacén → Corte (20), pero al sumar ambos sentidos el par más alto es Corte–Ensamble (15 + 10 = 25). Siempre suma los dos sentidos antes de decidir qué áreas ubicar juntas. La calculadora lo muestra.</div>
+
+  <h2>Preguntas de repaso rápido</h2>
+  <details><summary>¿Qué diferencia hay entre el diagrama relacional de actividades y el de espacios?</summary>El de actividades muestra qué tanto necesitan estar cerca las áreas. El de espacios muestra la cercanía y además el tamaño (m²) de cada área.</details>
+  <details><summary>¿Qué diferencia hay entre disposición ideal y práctica?</summary>La ideal es la mejor organización posible sin restricciones, sirve de referencia. La práctica es la que se puede implementar con el edificio, el presupuesto, los equipos y la seguridad reales.</details>
+  <details><summary>¿Qué significa que los movimientos entre dos áreas sean asimétricos?</summary>Que no se mueve la misma cantidad en ambos sentidos: por ejemplo 20 movimientos de A a B y solo 2 de B a A. Por eso se suman los dos sentidos para decidir la cercanía.</details>
+  <details><summary>¿Cuándo usar FIFO, FEFO y ABC?</summary>FIFO cuando importa el orden de llegada; FEFO cuando hay fecha de vencimiento (alimentos, medicinas); ABC para decidir cuánto control merece cada material según su valor económico.</details>
+  <details><summary>¿Una mejora de distancia basta para aprobar un cambio de distribución?</summary>No. También se revisan tiempos de transporte, manipulación, seguridad y el costo de implementar el cambio.</details>
+
+  <h3>Cinco preguntas más de repaso</h3>
+  <details><summary>¿Qué diferencia hay entre el análisis de recorrido y el análisis de transportación?</summary>El análisis de recorrido representa y mide el desplazamiento de materiales, personas, herramientas o documentos entre áreas, e identifica movimientos innecesarios, retrocesos y cruces. El análisis de transportación estudia qué se transporta, desde dónde, hacia dónde, en qué cantidad, a qué distancia y con qué costo; por eso usa flujo, distancia, costo unitario, frecuencia y medio de transporte.</details>
+  <details><summary>¿Cuáles son las seis etapas para evaluar una distribución de planta existente?</summary>1) Recopilar información. 2) Analizar la distribución actual. 3) Utilizar herramientas de evaluación. 4) Identificar problemas. 5) Proponer mejoras. 6) Comparar los resultados.</details>
+  <details><summary>¿Qué significa cada código de la tabla relacional?</summary><b>A</b> absolutamente necesario (muy próximos), <b>E</b> especialmente importante (muy conveniente su cercanía), <b>I</b> importante (necesario que estén cerca), <b>O</b> cercanía ordinaria (cercanía normal), <b>U</b> sin importancia (cercanía no relevante), <b>X</b> no deseable (conviene mantenerlas separadas).</details>
+  <details><summary>¿Cómo se calculan el ahorro, la reducción porcentual y el costo al comparar la distribución actual con la propuesta?</summary>Ahorro = recorrido actual − recorrido propuesto. Reducción (%) = (actual − propuesto) / actual × 100. En el ejercicio de la sesión 13 el costo diario es metros por día × costo por metro, y el ahorro mensual es el ahorro diario × los días trabajados al mes.</details>
+  <details><summary>¿Qué indicadores se usan para evaluar la eficiencia de la manipulación y el almacenamiento?</summary>Exactitud del inventario, utilización del espacio, costo de manipulación, tiempo de despacho, rotación de inventario y tasa de daños. Si el costo de manipulación aumenta, la empresa debe investigar si hay recorridos excesivos, equipos inadecuados, movimientos innecesarios o mala distribución de planta.</details>
+
+  <footer>Material elaborado a partir de las diapositivas de las sesiones 11, 12, 13 y 14 del curso Disposición de Planta (UTP). Los ejemplos marcados «En Perú», las respuestas de práctica, los ejercicios, las preguntas de opción múltiple y de verdadero o falso, y las notas de revisión son aportes de esta guía de estudio, elaborados solo con la teoría de esas diapositivas.</footer>
+</section>
+
+
+<!-- ===================== OPCIÓN MÚLTIPLE ===================== -->
+<section class="tab" id="test">
+  <h2>Opción múltiple</h2>
+  <p class="lead">60 preguntas sobre toda la teoría de las sesiones 11 a 14. Elige la alternativa, pulsa «Siguiente» y comprueba si acertaste.</p>
+  <div class="testbox" id="quiz-mc"></div>
+</section>
+
+<!-- ===================== VERDADERO O FALSO ===================== -->
+<section class="tab" id="vf">
+  <h2>Verdadero o falso</h2>
+  <p class="lead">34 afirmaciones sobre la teoría de la unidad. Decide si son verdaderas o falsas y aprende de cada explicación.</p>
+  <div class="testbox" id="quiz-vf"></div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  function f(n,d){ if(!isFinite(n)) return '–'; try{return n.toLocaleString('es-PE',{maximumFractionDigits:d==null?2:d})}catch(e){return String(Math.round(n*100)/100)} }
+  function num(el){ var v=parseFloat(el.value); return isFinite(v)?v:0 }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;') }
+  function out(label,key,hi){ return '<div'+(hi?' class="hi"':'')+'><small>'+label+'</small><b data-o="'+key+'">–</b></div>' }
+  function setO(root,k,v){ var e=$('[data-o="'+k+'"]',root); if(e) e.textContent=v }
+  function shell(root,title,tag,inner){ root.innerHTML='<div class="hd">'+title+'<span>'+tag+'</span></div><div class="bd">'+inner+'</div>' }
+  var CALC={};
+
+  /* ---------- Recorrido (suma de tramos) ---------- */
+  CALC.route=function(root){
+    var nodes=root.dataset.nodes.split('|'), d=root.dataset.d.split(',').map(Number);
+    var rep=root.dataset.rep, imp=root.dataset.imp, h='<div class="flow">';
+    nodes.forEach(function(n,i){ h+='<div class="node">'+esc(n)+'</div>'; if(i<d.length) h+='<div class="leg"><input type="number" min="0" step="1" data-d value="'+d[i]+'" aria-label="Metros del tramo '+(i+1)+'"> m</div>'; });
+    h+='</div><div class="grid" style="margin:.4rem 0">';
+    h+='<label>'+esc(root.dataset.replabel)+' <input type="number" min="0" step="1" data-rep value="'+rep+'"></label>';
+    h+='<label>Recorrido mejorado (m por ciclo) <input type="number" min="0" step="1" data-imp value="'+imp+'"></label></div>';
+    h+='<div class="out">'+out('Distancia por ciclo (m)','tot')+out('Recorrido por día (m)','day')+out('Recorrido por día (km)','km')+out('Ahorro por ciclo (m)','sav')+out('Reducción','pct',1)+'</div><p class="hint">Cambia los metros, la cantidad por día o el recorrido mejorado.</p>';
+    shell(root,esc(root.dataset.title),'Calculadora',h);
+    function calc(){
+      var tot=0; $$('[data-d]',root).forEach(function(i){tot+=num(i)});
+      var r=num($('[data-rep]',root)), m=num($('[data-imp]',root));
+      setO(root,'tot',f(tot)); setO(root,'day',f(tot*r,0)); setO(root,'km',f(tot*r/1000)); setO(root,'sav',f(tot-m));
+      setO(root,'pct',tot>0?f((tot-m)/tot*100)+' %':'–');
+    }
+    root.addEventListener('input',calc); calc();
+  };
+
+  /* ---------- Flujo: viajes x distancia (+ escenario propuesto y costo) ---------- */
+  CALC.flow=function(root){
+    function parse(s){return s.split(';').map(function(r){var p=r.split('|');return {n:p[0],d:+p[1],v:+p[2]}})}
+    var A=parse(root.dataset.a), B=root.dataset.b?parse(root.dataset.b):null, cost=root.dataset.cost, days=root.dataset.days, imp=root.dataset.imp;
+    function table(rows,g,title){
+      var h='<h4 style="margin-top:.2rem">'+title+'</h4><div class="tw"><table><thead><tr><th>Recorrido</th><th class="n">Distancia (m)</th><th class="n">Viajes/día</th><th class="n">Metros/día</th></tr></thead><tbody>';
+      rows.forEach(function(r,i){ h+='<tr><td class="rowlab">'+esc(r.n)+'</td><td class="n"><input type="number" min="0" data-g="'+g+'" data-k="d'+i+'" value="'+r.d+'" aria-label="Distancia '+esc(r.n)+'"></td><td class="n"><input type="number" min="0" data-g="'+g+'" data-k="v'+i+'" value="'+r.v+'" aria-label="Viajes '+esc(r.n)+'"></td><td class="n" data-r="'+g+i+'">0</td></tr>'; });
+      return h+'</tbody><tfoot><tr><td colspan="3">Total (m/día)</td><td class="n" data-o="t'+g+'">0</td></tr></tfoot></table></div>';
+    }
+    var h=table(A,'a',B?'Distribución actual':'Tramos y viajes');
+    if(B) h+=table(B,'b','Distribución propuesta (A → B → C → D → E)');
+    else h+='<p><label>Recorrido total mejorado (m/día) <input type="number" min="0" data-imp value="'+imp+'"></label></p>';
+    if(B) h+='<p><label>Costo por metro (S/) <input type="number" min="0" step="0.05" data-cost value="'+cost+'"></label> &nbsp; <label>Días trabajados al mes <input type="number" min="0" data-days value="'+days+'"></label></p>';
+    h+='<div class="out">';
+    if(B) h+=out('Ahorro (m/día)','sav')+out('Reducción','pct',1)+out('Costo diario actual','ca')+out('Costo diario propuesto','cb')+out('Ahorro mensual','sm',1);
+    else h+=out('Total actual (m/día)','ta2')+out('Ahorro (m/día)','sav')+out('Reducción','pct',1);
+    h+='</div>';
+    shell(root,esc(root.dataset.title),'Calculadora',h);
+    function sum(g,rows){var t=0;rows.forEach(function(r,i){var d=num($('[data-g="'+g+'"][data-k="d'+i+'"]',root)),v=num($('[data-g="'+g+'"][data-k="v'+i+'"]',root));var x=d*v;t+=x;var c=$('[data-r="'+g+i+'"]',root);if(c)c.textContent=f(x,0)});setO(root,'t'+g,f(t,0));return t}
+    function calc(){
+      var ta=sum('a',A);
+      if(B){
+        var tb=sum('b',B), c=num($('[data-cost]',root)), dy=num($('[data-days]',root));
+        setO(root,'sav',f(ta-tb,0)); setO(root,'pct',ta>0?f((ta-tb)/ta*100)+' %':'–');
+        setO(root,'ca','S/ '+f(ta*c)); setO(root,'cb','S/ '+f(tb*c)); setO(root,'sm','S/ '+f((ta-tb)*c*dy,0));
+      } else {
+        var m=num($('[data-imp]',root)); setO(root,'ta2',f(ta,0)); setO(root,'sav',f(ta-m,0)); setO(root,'pct',ta>0?f((ta-m)/ta*100)+' %':'–');
+      }
+    }
+    root.addEventListener('input',calc); calc();
+  };
+
+  /* ---------- Matriz de flujo ---------- */
+  var PRESETS={
+    p1:{t:'Ejemplo de 3 áreas',l:['A Almacén','B Producción','C Ensamble'],m:[[0,20,5],[2,0,15],[0,3,0]]},
+    p2:{t:'Matriz de 4 áreas',l:['A Almacén','B Corte','C Ensamble','D Pintura'],m:[[0,20,5,3],[2,0,15,7],[1,10,0,12],[0,4,8,0]]},
+    p3:{t:'Práctica',l:['A Almacén','B Corte','C Pintura'],m:[[0,12,8],[4,0,18],[2,6,0]]}
+  };
+  CALC.matrix=function(root){
+    var cur='p1';
+    shell(root,'Análisis matricial: de dónde a dónde','Calculadora','<div class="chips" id="pb" role="group" aria-label="Elegir matriz"></div><div class="tw" style="border:0;background:none"><div id="mgrid"></div></div><h4>Movimientos por par (ambos sentidos)</h4><div class="pairs" id="prs"></div><p class="hint" id="mhint"></p>');
+    var pb=$('#pb',root);
+    Object.keys(PRESETS).forEach(function(k){var b=document.createElement('button');b.type='button';b.textContent=PRESETS[k].t;b.dataset.p=k;pb.appendChild(b)});
+    function build(k){
+      cur=k; var P=PRESETS[k], n=P.l.length, h='<table class="mx"><thead><tr><th>Desde ↓ / Hacia →</th>';
+      P.l.forEach(function(x){h+='<th>'+esc(x)+'</th>'}); h+='</tr></thead><tbody>';
+      for(var i=0;i<n;i++){h+='<tr><th>'+esc(P.l[i])+'</th>';for(var j=0;j<n;j++){h+= i===j?'<td class="diag">0</td>':'<td><input type="number" min="0" data-i="'+i+'" data-j="'+j+'" value="'+P.m[i][j]+'" aria-label="De '+esc(P.l[i])+' a '+esc(P.l[j])+'"></td>'}h+='</tr>'}
+      $('#mgrid',root).innerHTML=h+'</tbody></table>';
+      $$('#pb button',root).forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===k?'true':'false')});
+      calc();
+    }
+    function calc(){
+      var P=PRESETS[cur], n=P.l.length, m=[],i,j; for(i=0;i<n;i++){m.push([]);for(j=0;j<n;j++){var e=$('input[data-i="'+i+'"][data-j="'+j+'"]',root);m[i].push(e?num(e):0)}}
+      var pairs=[]; for(i=0;i<n;i++)for(j=i+1;j<n;j++)pairs.push({a:P.l[i].split(' ')[0],b:P.l[j].split(' ')[0],an:P.l[i],bn:P.l[j],v:m[i][j]+m[j][i],f:m[i][j],r:m[j][i]});
+      pairs.sort(function(x,y){return y.v-x.v}); var mx=Math.max.apply(null,pairs.map(function(p){return p.v}))||1;
+      $('#prs',root).innerHTML=pairs.map(function(p,idx){return '<div class="pair'+(idx===0?' top':'')+'"><span>'+p.a+' – '+p.b+'</span><span class="bar"><i style="width:'+(p.v/mx*100)+'%"></i></span><span>'+p.v+'</span></div>'}).join('');
+      var t=pairs[0]; $('#mhint',root).textContent=t.v>0?'Ubicar más cerca: '+t.an+' y '+t.bn+' ('+t.f+' + '+t.r+' = '+t.v+' movimientos por día).':'Sin movimientos.';
+    }
+    root.addEventListener('click',function(e){var b=e.target.closest('button[data-p]');if(b)build(b.dataset.p)});
+    root.addEventListener('input',calc); build('p1');
+  };
+
+  /* ---------- Espacio ---------- */
+  CALC.space=function(root){
+    var rows=root.dataset.rows.split(';').map(function(r){var p=r.split('|');return {n:p[0],a:+p[1]}}), local=root.dataset.local;
+    var h='<p><label>Área del local (m²) <input type="number" min="0" data-local value="'+local+'"></label></p><div class="tw"><table><thead><tr><th>Área</th><th class="n">Espacio requerido (m²)</th></tr></thead><tbody>';
+    rows.forEach(function(r,i){h+='<tr><td>'+esc(r.n)+'</td><td class="n"><input type="number" min="0" data-a value="'+r.a+'" aria-label="'+esc(r.n)+'"></td></tr>'});
+    h+='</tbody><tfoot><tr><td>Total requerido</td><td class="n" data-o="tot">0</td></tr></tfoot></table></div><div class="blocks" id="sb" aria-label="Proporción del local"></div><div class="out">'+out('Espacio restante (m²)','left',1)+out('Restante del local','pct')+out('Veredicto','ver')+'</div><p class="hint">El restante se reserva para pasillos y circulación; si basta depende de equipos, salidas de emergencia y manejo de materiales.</p>';
+    shell(root,'Ejercicio resuelto 5: ¿caben las cuatro áreas?','Calculadora',h);
+    function calc(){
+      var L=num($('[data-local]',root)), t=0, parts=[]; $$('[data-a]',root).forEach(function(i,k){var v=num(i);t+=v;parts.push([rows[k].n.split('.')[0],v])});
+      var left=L-t; setO(root,'tot',f(t,0)); setO(root,'left',f(left,0)); setO(root,'pct',L>0?f(left/L*100,1)+' %':'–');
+      setO(root,'ver',left<0?'No caben':(left/L<0.1?'Ajustado':'Hay margen'));
+      var b=parts.map(function(p){return '<div class="blk" style="flex:'+Math.max(p[1],1)+'"><span>'+p[0]+'</span><b>'+p[1]+'</b></div>'}).join('');
+      if(left>0) b+='<div class="blk pas" style="flex:'+left+'"><span>Libre</span><b>'+f(left,0)+'</b></div>';
+      $('#sb',root).innerHTML=b;
+    }
+    root.addEventListener('input',calc); calc();
+  };
+
+  /* ---------- Multiproducto ---------- */
+  CALC.multi=function(root){
+    var ops=['Corte','Torneado','Soldadura','Pintura'], prod={A:[1,2,3,4],B:[1,0,2,3],C:[1,3,2,4]};
+    var h='<div class="tw"><table><thead><tr><th>Producto</th>'+ops.map(function(o){return '<th class="n">'+o+'</th>'}).join('')+'</tr></thead><tbody>';
+    Object.keys(prod).forEach(function(p){h+='<tr><td><button type="button" data-p="'+p+'" aria-pressed="false">Producto '+p+'</button></td>'+prod[p].map(function(v){return '<td class="n">'+(v||'--')+'</td>'}).join('')+'</tr>'});
+    h+='</tbody></table></div><p class="hint">Los números son el orden de las operaciones; «--» significa que el producto no pasa por esa operación. Pulsa un producto para ver su ruta.</p><div class="flow" id="mf"></div><p id="mt"></p>';
+    shell(root,'Ejercicio resuelto: tres productos, cuatro operaciones','Interactivo',h);
+    function show(p){
+      var seq=prod[p].map(function(v,i){return [v,ops[i]]}).filter(function(x){return x[0]}).sort(function(a,b){return a[0]-b[0]}).map(function(x){return x[1]});
+      $('#mf',root).innerHTML=seq.map(function(s,i){return (i?'<div class="leg"></div>':'')+'<div class="node">'+s+'</div>'}).join('');
+      $$('button',root).forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===p?'true':'false')});
+    }
+    $('#mt',root).innerHTML='<b>Lectura de la clase:</b> los tres productos pasan por corte, pero no todos usan las mismas operaciones después. La distribución debe considerar las operaciones comunes y también las rutas particulares. <b>Lectura sencilla:</b> Corte y Pintura aparecen en todos, y Torneado y Soldadura se usan en distinto orden (A: torneado y luego soldadura; C: al revés), así que conviene ubicarlas cerca.';
+    root.addEventListener('click',function(e){var b=e.target.closest('button[data-p]');if(b)show(b.dataset.p)}); show('A');
+  };
+
+  /* ---------- Quiz de tabla relacional ---------- */
+  CALC.quiz=function(root){
+    var items=[
+      ['Almacén de materia prima – Corte','A','Hay traslado frecuente de material.','clase'],
+      ['Corte – Mecanizado','A','Secuencia directa de producción.','clase'],
+      ['Almacén – Oficina administrativa','O','La cercanía no es indispensable.','clase'],
+      ['Corte – Oficina administrativa','X','El ruido y los riesgos justifican separarlas.','clase'],
+      ['Pollería: cocina – comedor','A','Los platos pasan de la cocina a las mesas todo el tiempo.','pe'],
+      ['Pollería: cocina – baños de clientes','X','Olores e higiene: conviene separarlos.','pe']
+    ];
+    var h='<p>Elige el código que pondrías y comprueba. Los primeros cuatro son de la clase; los dos últimos son un ejemplo peruano con respuesta sugerida.</p><div class="tw"><table><thead><tr><th>Par de áreas</th><th>Tu código</th><th>Resultado</th></tr></thead><tbody>';
+    items.forEach(function(it,i){h+='<tr><td>'+esc(it[0])+(it[3]==='pe'?' <span class="chip">En Perú</span>':'')+'</td><td><select data-q="'+i+'" aria-label="Código para '+esc(it[0])+'"><option value="">Elegir</option>'+'AEIOUX'.split('').map(function(c){return '<option>'+c+'</option>'}).join('')+'</select></td><td data-qr="'+i+'">–</td></tr>'});
+    shell(root,'Practica la tabla relacional','Autoevaluación',h+'</tbody></table></div>');
+    root.addEventListener('change',function(e){
+      var s=e.target.closest('select[data-q]'); if(!s) return; var i=+s.dataset.q, c=$('[data-qr="'+i+'"]',root);
+      if(!s.value){c.textContent='–';return}
+      c.innerHTML= s.value===items[i][1] ? '<span style="color:var(--good);font-weight:600">Correcto.</span> '+esc(items[i][2]) : '<span style="color:var(--bad);font-weight:600">Prueba otra vez o revisa:</span> la respuesta es <b>'+items[i][1]+'</b>. '+esc(items[i][2]);
+    });
+  };
+
+  /* ---------- FIFO / LIFO / FEFO ---------- */
+  CALC.fifo=function(root){
+    var lots=[{n:'Lote 1',ing:'Enero',ven:'Junio',io:1,vo:5},{n:'Lote 2',ing:'Febrero',ven:'Abril',io:2,vo:3},{n:'Lote 3',ing:'Marzo',ven:'Agosto',io:3,vo:7}];
+    var m='fifo';
+    var h='<div class="chips" role="group" aria-label="Método"><button type="button" data-m="fifo">FIFO</button><button type="button" data-m="lifo">LIFO</button><button type="button" data-m="fefo">FEFO</button></div><div class="tw"><table class="lots"><thead><tr><th>Lote</th><th>Ingresó</th><th>Vence</th><th>Orden de salida</th></tr></thead><tbody id="lb"></tbody></table></div><p id="ln"></p><p class="hint">Ejemplo con yogurt. Fíjate que FIFO y FEFO dan resultados distintos cuando el lote que llegó después vence antes.</p>';
+    shell(root,'¿Qué lote sale primero?','Interactivo',h);
+    function render(){
+      var ord=lots.slice().sort(function(a,b){return m==='fifo'?a.io-b.io:m==='lifo'?b.io-a.io:a.vo-b.vo});
+      $('#lb',root).innerHTML=lots.map(function(l){var k=ord.indexOf(l)+1;return '<tr'+(k===1?' class="go"':'')+'><td>'+l.n+'</td><td>'+l.ing+'</td><td>'+l.ven+'</td><td><span class="ord">'+k+'</span></td></tr>'}).join('');
+      $$('button',root).forEach(function(b){b.setAttribute('aria-pressed',b.dataset.m===m?'true':'false')});
+      $('#ln',root).textContent={fifo:'Sale primero el '+ord[0].n+': es el que entró antes.',lifo:'Sale primero el '+ord[0].n+': es el último que entró.',fefo:'Sale primero el '+ord[0].n+': es el que vence antes ('+ord[0].ven+').'}[m];
+    }
+    root.addEventListener('click',function(e){var b=e.target.closest('button[data-m]');if(b){m=b.dataset.m;render()}}); render();
+  };
+
+  /* ---------- KPI sesión 14 ---------- */
+  CALC.kpi=function(root){
+    var F=[['rec','Materiales recibidos al mes (unidades)',1200],['cost','Costo de manipulación mensual (S/)',7200],['cap','Capacidad del almacén (pallets)',600],['occ','Espacio ocupado (pallets)',480],['dam','Materiales dañados (unidades)',24],['inv','Inventario promedio (S/)',80000],['ven','Costo de ventas mensual (S/)',160000],['min','Tiempo de manipulación (min por unidad)',15],['rc','Mejora estimada: reducción del costo (%)',20],['rt','Mejora estimada: reducción del tiempo (%)',30]];
+    var h='<div class="grid" style="margin:0">'+F.map(function(x){return '<label>'+x[1]+'<br><input type="number" min="0" data-k="'+x[0]+'" value="'+x[2]+'" style="width:100%"></label>'}).join('')+'</div>';
+    h+='<div class="out">'+out('1. Costo por unidad','cm',1)+out('2. Utilización del almacén','ut',1)+out('Pallets libres','lib')+out('3. Materiales dañados','dm',1)+out('4. Rotación (veces/mes)','rot',1)+out('Días de inventario','dias')+out('5. Tiempo de manipulación','hrs',1)+out('6. Nuevo costo mensual','nc',1)+out('Ahorro mensual','ah')+out('7. Nuevo tiempo','nt',1)+out('Horas ahorradas','ht')+'</div>';
+    shell(root,'Siete preguntas del ejercicio resuelto','Calculadora',h);
+    function g(k){return num($('[data-k="'+k+'"]',root))}
+    function calc(){
+      var rec=g('rec'),cost=g('cost'),cap=g('cap'),occ=g('occ'),dam=g('dam'),inv=g('inv'),ven=g('ven'),mn=g('min'),rc=g('rc')/100,rt=g('rt')/100;
+      var rot=inv>0?ven/inv:NaN, hrs=rec*mn/60;
+      setO(root,'cm',rec>0?'S/ '+f(cost/rec):'–'); setO(root,'ut',cap>0?f(occ/cap*100)+' %':'–'); setO(root,'lib',f(cap-occ,0));
+      setO(root,'dm',rec>0?f(dam/rec*100)+' %':'–'); setO(root,'rot',f(rot)); setO(root,'dias',isFinite(rot)&&rot>0?'≈ '+f(30/rot,0)+' días':'–');
+      setO(root,'hrs',f(hrs)+' h'); setO(root,'nc','S/ '+f(cost*(1-rc),0)); setO(root,'ah','S/ '+f(cost*rc,0)); setO(root,'nt',f(hrs*(1-rt))+' h'); setO(root,'ht',f(hrs*rt)+' h');
+    }
+    root.addEventListener('input',calc); calc();
+  };
+
+  $$('.calc').forEach(function(el){var fn=CALC[el.dataset.calc]; if(fn) fn(el)});
+
+  /* ---------- Pestañas con hash ---------- */
+  var tabs=['inicio','sesion-11','sesion-12','sesion-13','sesion-14','test','vf','formulas'];
+  function route(){
+    var id=(location.hash||'').replace('#',''); if(tabs.indexOf(id)<0) id='inicio';
+    $$('section.tab').forEach(function(s){s.classList.toggle('on',s.id===id)});
+    $$('nav.tabs a').forEach(function(a){ if(a.getAttribute('href')==='#'+id) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current') });
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',route); route();
+})();
+</script>
+<script>
+/* ===== Banco de preguntas: solo teoría de las sesiones 11 a 14 ===== */
+function M(sec,q,o,a,e){return {t:'mc',c:sec,q:q,o:o,a:a,e:e}}
+function N(sec,q,a,u,e){return {t:'num',c:sec,q:q,a:a,u:u,e:e}}
+
+/* ---------- Ejercicios por sesión ---------- */
+var EX={
+'11':[
+M('Distribución de detalle','La distribución de detalle consiste en…',["Calcular el costo unitario de transporte entre áreas","Organizar y ubicar máquinas, equipos, herramientas, materiales y puestos de trabajo dentro de un área","Clasificar los materiales según su valor de consumo anual","Dibujar únicamente el recorrido de los productos"],1,"Es la definición de la clase: organizar y ubicar recursos dentro de un área para aprovechar el espacio, facilitar las operaciones y reducir desplazamientos, tiempos y costos."),
+M('Distribución de detalle','¿Cuál de estas NO es un objetivo principal de la distribución de detalle?',["Aprovechar eficientemente el espacio disponible","Reducir el movimiento de materiales y trabajadores","Evitar cruces, retrocesos y congestión","Aumentar los retrocesos para facilitar la supervisión"],3,"Los objetivos buscan evitar cruces, retrocesos y congestión. Sí se busca facilitar la supervisión, pero no aumentando los retrocesos."),
+M('Distribución de detalle','En el ejemplo de la clase (componentes metálicos), ¿cuál es la distribución propuesta?',["Almacén de producto terminado → Corte → Soldadura → Almacén de materia prima","Almacén de materia prima → Corte de material → Soldadura y ensamblaje → Acabado y control de calidad → Almacén de producto terminado","Corte → Almacén de materia prima → Acabado → Soldadura","Soldadura → Corte → Acabado → Almacén de materia prima"],1,"El material avanza de forma lógica desde la recepción hasta el producto terminado, lo que disminuye distancias y permite identificar posibles cuellos de botella."),
+N('Análisis de recorrido','Una pieza recorre: Almacén → Corte 15 m, Corte → Torneado 25 m, Torneado → Soldadura 30 m y Soldadura → Almacén de producto terminado 20 m. ¿Cuántos metros recorre por ciclo?',90,'m',"La distancia total se calcula sumando todos los desplazamientos: 15 + 25 + 30 + 20 = 90 m."),
+N('Análisis de recorrido','Una nueva distribución baja el recorrido de 90 m a 54 m por ciclo. ¿Cuál es la reducción porcentual?',40,'%',"Reducción = (anterior − nueva) / anterior × 100 = (90 − 54) / 90 × 100 = 40 %."),
+M('Análisis de recorrido','Una nueva distribución reduce la distancia recorrida. Para confirmar que la mejora es global, la clase indica que también se debe evaluar…',["Solo el color de las áreas","Los tiempos de transporte, la manipulación de materiales, la seguridad y el costo de implementar los cambios","Únicamente la cantidad de operarios","Nada más: con la distancia basta"],1,"La interpretación de la clase advierte que, además de la distancia, hay que evaluar tiempos, manipulación, seguridad y costo de implementación."),
+M('Diagrama de recorrido sencillo','¿Cuál es un elemento principal del diagrama de recorrido sencillo?',["Líneas o flechas que muestran el recorrido y el sentido","La fecha de vencimiento de los productos","Los códigos de proximidad A, E, I, O, U, X","La capacidad en pallets del almacén"],0,"Los elementos son: plano de la planta, áreas u operaciones, líneas o flechas, distancias, y puntos de origen y destino."),
+N('Diagrama de recorrido sencillo','Una pieza va de A (almacén) a B (corte) 12 m, de B a C (mecanizado) 18 m y de C a D (control de calidad) 10 m. ¿Cuál es la distancia total por pieza?',40,'m',"DT = 12 + 18 + 10 = 40 m por pieza."),
+N('Diagrama de recorrido sencillo','Con DT = 40 m por pieza y 50 piezas al día (cada una hace el recorrido completo), ¿cuántos metros se acumulan por día?',2000,'m',"D diaria = DT × piezas = 40 × 50 = 2 000 m (2 km)."),
+N('Diagrama de recorrido sencillo','Si el recorrido baja de 40 m a 30 m por pieza, ¿cuál es la reducción porcentual?',25,'%',"(40 − 30) / 40 × 100 = 25 %."),
+M('Diagrama multiproducto','¿Para qué sirve el diagrama multiproducto?',["Para identificar operaciones comunes entre productos y comparar sus rutas de fabricación","Para calcular el inventario promedio","Para medir la tasa de daños","Para fijar el costo del pallet"],0,"Sirve para identificar operaciones comunes, comparar rutas, determinar qué áreas deben ubicarse próximas y reducir recorridos, tiempos y costos."),
+M('Diagrama multiproducto','Un producto X tiene: Corte 1, Torneado 2, Soldadura --, Pintura 3. ¿Cuál es su ruta?',["Corte → Torneado → Soldadura → Pintura","Corte → Torneado → Pintura","Pintura → Torneado → Corte","Corte → Soldadura → Pintura"],1,"Los números son el orden de las operaciones y el guion indica que el producto no requiere esa operación."),
+M('Diagrama multiproducto','En la tabla de la clase (productos A, B y C), ¿qué producto NO requiere torneado?',["A","B","C","Ninguno"],1,"El producto B tiene un guion en la columna Torneado: no la requiere."),
+M('Análisis de transportación','En el análisis de transportación, ¿qué representa el flujo (Fij)?',["El recorrido entre dos áreas","La cantidad transportada desde el área i hasta el área j","El costo de transportar una unidad por unidad de distancia","El medio de transporte: carretilla, montacargas o transportador"],1,"Flujo (Fij) es la cantidad transportada desde el área i hasta el área j."),
+N('Análisis de transportación','Trayectos: Almacén → Corte, 5 viajes/día de 40 m; Corte → Ensamble, 4 viajes/día de 25 m; Ensamble → Pintura, 3 viajes/día de 20 m. Calcula D_T = Σ(Fi × Di).',360,'m/día',"5×40 = 200; 4×25 = 100; 3×20 = 60. Total: 200 + 100 + 60 = 360 m/día."),
+N('Análisis de transportación','Si la reorganización baja el recorrido total de 360 a 270 m/día, ¿cuál es la reducción porcentual?',25,'%',"(360 − 270) / 360 × 100 = 25 %."),
+N('Análisis matricial','En una matriz de flujo, de A hacia B se hacen 14 movimientos diarios y de B hacia A, 6. ¿Cuántos movimientos diarios hay entre A y B sumando ambos sentidos?',20,'movimientos/día',"Se suman los dos sentidos: 14 + 6 = 20 movimientos/día."),
+M('Análisis matricial','Matriz de 3 áreas: A→B 10, B→A 1, B→C 9, C→B 5, A→C 2, C→A 0. ¿Qué par conviene evaluar ubicar más cerca?',["A–B (11)","B–C (14)","A–C (2)","Los tres por igual"],1,"A–B = 10 + 1 = 11; B–C = 9 + 5 = 14; A–C = 2 + 0 = 2. El par con mayor intercambio es B–C."),
+M('Análisis matricial','En la matriz de flujo, ¿qué indican las filas y las columnas?',["Filas: destino; columnas: origen","Filas: origen; columnas: destino","Filas: costo; columnas: distancia","Filas: productos; columnas: operarios"],1,"Las filas indican el área de origen y las columnas el área de destino."),
+M('Comparación de los 6 métodos','Según el resumen de la clase, ¿qué método responde «cuánto cuesta transportarlos»?',["Distribución de detalle","Diagrama de recorrido sencillo","Análisis de transportación","Análisis matricial"],2,"Resumen: transportación estudia cantidad transportada, distancias y costos.")
+],
+'12':[
+M('Distribución de planta general','La distribución de planta general es…',["La organización física de las áreas de una empresa dentro de un espacio, considerando máquinas, almacenes, talleres, oficinas y zonas de circulación","El cálculo de la rotación del inventario","Solo la lista de códigos de proximidad","El diagrama del recorrido de un único producto"],0,"Es la definición de la clase."),
+M('Distribución de planta general','¿Cuál es el objetivo de la distribución general?',["Facilitar el flujo de materiales, personas e información, aprovechando el espacio y reduciendo costos operativos","Aumentar los retrocesos de las piezas","Eliminar los almacenes","Reducir las áreas a una sola"],0,"El objetivo es facilitar el flujo y aprovechar el espacio reduciendo costos operativos."),
+M('Tabla relacional','¿Qué grado de proximidad es «Absolutamente necesario»?',["O","U","A","X"],2,"A: absolutamente necesario, deben estar muy próximos."),
+M('Tabla relacional','«Especialmente importante: es muy conveniente su cercanía» corresponde al código…',["E","I","O","U"],0,"E: especialmente importante."),
+M('Tabla relacional','«Importante: es necesario que estén cerca» corresponde al código…',["E","I","O","A"],1,"I: importante."),
+M('Tabla relacional','«Cercanía ordinaria: la cercanía es normal» corresponde al código…',["U","X","I","O"],3,"O: cercanía ordinaria."),
+M('Tabla relacional','«Sin importancia: la cercanía no es relevante» corresponde al código…',["U","X","O","E"],0,"U: sin importancia."),
+M('Tabla relacional','«No deseable: conviene mantenerlas separadas» corresponde al código…',["A","E","X","O"],2,"X: no deseable."),
+M('Tabla relacional','En la clase, Corte–Oficina lleva el código X porque…',["El material se traslada con frecuencia","Existe una secuencia directa de producción","El ruido y los riesgos pueden justificar la separación","La proximidad no es indispensable"],2,"El ruido y los riesgos pueden justificar que se mantengan separadas."),
+M('Tabla relacional','En la clase, Almacén–Corte lleva el código A porque…',["El material debe trasladarse frecuentemente","El ruido es alto","No hay relación entre ellas","Se evitan cruces de entradas y salidas"],0,"El material debe trasladarse con frecuencia entre el almacén de materia prima y el corte."),
+M('Diagrama relacional de actividades','El diagrama relacional de actividades muestra…',["La necesidad de cercanía entre las áreas, de acuerdo con la tabla relacional","El camino exacto de un operario por el plano","El costo mensual de transporte","El número de pallets del almacén"],0,"Muestra la necesidad de cercanía entre áreas según la tabla relacional."),
+M('Diagrama relacional de actividades','El diagrama de recorrido representa…',["Sobre el plano de la planta, el camino que siguen materiales, productos o personas","Solo el tamaño de las áreas","Los códigos A–X","El presupuesto de la planta"],0,"Se distingue del relacional de actividades porque dibuja el camino real sobre el plano."),
+N('Diagrama relacional de espacios','Tres áreas: almacén de materia prima 120 m², producción 250 m² y almacén de productos terminados 90 m². ¿Cuál es el espacio total requerido?',460,'m²',"120 + 250 + 90 = 460 m²."),
+M('Diagrama relacional de espacios','¿Qué incorpora el diagrama relacional de espacios que el de actividades no?',["El costo por metro recorrido","El espacio requerido por cada área","La fecha de vencimiento","El orden FIFO"],1,"A diferencia del de actividades, este considera también el tamaño de las áreas."),
+N('Diagrama relacional de espacios','Un local de 450 m² debe alojar áreas de 60, 100, 150 y 90 m². ¿Cuántos m² quedan?',50,'m²',"Total requerido: 60 + 100 + 150 + 90 = 400 m². Restante: 450 − 400 = 50 m²."),
+M('Disposición ideal','La disposición ideal se diseña…',["Considerando desde el inicio todas las limitaciones físicas","Sin considerar inicialmente todas las limitaciones físicas, económicas o estructurales","Solo con la planta ya construida","Sin tomar en cuenta el flujo de materiales"],1,"Es la distribución teórica que busca la mejor organización posible."),
+M('Disposición ideal','¿Qué disposición sirve como modelo de referencia?',["La práctica","La ideal","Ninguna","Ambas por igual"],1,"La ideal sirve como modelo de referencia para saber cómo debería organizarse la planta."),
+M('Disposición práctica','¿Cuál de estos NO es un factor de la disposición práctica?',["Dimensiones reales del edificio","Presupuesto disponible","Seguridad y circulación del personal","El nombre comercial de la empresa"],3,"Los factores de la clase son dimensiones, columnas y accesos, máquinas instaladas, presupuesto, seguridad y circulación, y futuras ampliaciones."),
+M('Ejercicio resuelto 5','En el ejercicio 5, la relación A–D lleva el código X porque…',["Se busca evitar cruces innecesarios entre entradas y salidas","La materia prima pasa directamente al almacén final","Son la secuencia principal","Hay movimientos pero no directos"],0,"Es la justificación que da la clase para A–D."),
+M('Ejercicio resuelto 5','En el ejercicio 5, la relación A–C lleva el código I porque…',["Hay movimiento de materiales, pero no directo","Se evita el ruido","Son la secuencia principal","No se relacionan en absoluto"],0,"Existe movimiento de materiales pero no directo."),
+M('Comparación de los 6 métodos','¿Qué método analiza limitaciones reales del edificio, presupuesto, equipos y seguridad?',["Distribución general","Tabla relacional","Disposición ideal","Disposición práctica"],3,"Según el cuadro de la clase, la disposición práctica sirve para diseñar una distribución que pueda implementarse.")
+],
+'13':[
+M('Qué es y objetivos','El objetivo de evaluar una distribución de planta existente es…',["Comprobar si la distribución actual permite operar eficientemente o si existen problemas que afectan el desempeño","Contratar más trabajadores","Cambiar los productos","Comprar maquinaria nueva siempre"],0,"Es el objetivo planteado en la clase."),
+M('Qué es y objetivos','¿Cuál de estas NO es una deficiencia que se busca identificar?',["Recorridos largos","Cruces innecesarios","Tiempos de espera","Un flujo ordenado desde la materia prima hasta el producto terminado"],3,"El flujo ordenado es un objetivo, no una deficiencia."),
+M('Etapas de la evaluación','¿Cuál es la primera de las seis etapas para evaluar una distribución existente?',["Proponer mejoras","Comparar resultados","Recopilar información","Identificar problemas"],2,"Etapas: recopilar información, analizar la distribución actual, utilizar herramientas, identificar problemas, proponer mejoras y comparar resultados."),
+M('Etapas de la evaluación','¿Qué etapa sigue inmediatamente después de «Analizar la distribución actual»?',["Utilizar herramientas de evaluación","Comparar los resultados","Proponer mejoras","Recopilar información"],0,"El orden es recopilar, analizar, utilizar herramientas, identificar problemas, proponer mejoras y comparar."),
+M('Etapas de la evaluación','¿Cuál es la última etapa?',["Identificar problemas","Proponer mejoras","Comparar los resultados","Recopilar información"],2,"Se compara la distribución actual con la propuesta para verificar si se obtienen beneficios."),
+M('Métodos de evaluación','El método de observación directa consiste en…',["Recorrer la planta y observar cómo se realizan las operaciones","Calcular la rotación del inventario","Dibujar la matriz de flujo","Clasificar materiales en A, B y C"],0,"Permite identificar recorridos innecesarios, congestión, esperas, espacios desaprovechados y riesgos de seguridad."),
+M('Métodos de evaluación','El diagrama de recorrido permite identificar…',["Cruces, retrocesos, recorridos largos y áreas con mayor circulación","Solo costos de inventario","La rotación del almacén","Los materiales dañados"],0,"Es lo que enumera la clase para el diagrama de recorrido."),
+M('Métodos de evaluación','¿Qué método evalúa el movimiento interno considerando distancias, frecuencia de transporte, costos y medios de transporte?',["Tabla relacional","Observación directa","Análisis de materiales","Análisis de transportación"],3,"Su objetivo es reducir el costo del manejo de materiales."),
+M('Métodos de evaluación','¿Qué estudia el análisis de materiales?',["Cómo se reciben, almacenan, trasladan y utilizan los materiales","Solo el tamaño de las áreas","El código A–X","La ubicación de oficinas"],0,"Su objetivo es evitar desperdicios y mejorar el flujo de materiales."),
+M('Métodos de evaluación','La comparación antes y después analiza indicadores como…',["Distancia recorrida, tiempo de producción, costos y productividad","Fecha de vencimiento y lote","Solo el color del piso","Número de oficinas"],0,"Compara la distribución actual con la propuesta."),
+M('Aspectos a evaluar','En el aspecto «Almacenes», lo que se debe evaluar es si…',["Están cerca de las áreas que los necesitan","Son de color uniforme","Tienen más de un piso","Almacenan un solo producto"],0,"Es la pregunta clave de la tabla de aspectos."),
+N('Ejercicio resuelto: muebles','Usa DR = D × V. Un tramo de 25 m se recorre 12 veces al día. ¿Cuál es la distancia recorrida diaria?',300,'m',"DR = 25 × 12 = 300 m."),
+N('Ejercicio resuelto: muebles','Tramos: A–B 30 m × 8 viajes; B–C 20 m × 6 viajes; C–D 10 m × 5 viajes. ¿Cuál es la distancia total recorrida por día?',410,'m/día',"A–B = 240; B–C = 120; C–D = 50. Total = 240 + 120 + 50 = 410 m/día."),
+N('Ejercicio resuelto: muebles','El recorrido actual es de 400 m/día y la propuesta lo baja a 260 m/día. ¿Cuál es la reducción porcentual?',35,'%',"(400 − 260) / 400 × 100 = 35 %."),
+N('Ejercicio resuelto: muebles','Con S/ 0,20 por metro recorrido, si se ahorran 200 m por día, ¿cuál es el ahorro diario en soles?',40,'S/',"200 × 0,20 = S/ 40."),
+N('Ejercicio resuelto: muebles','Con un ahorro de S/ 40 por día y 26 días trabajados al mes, ¿cuál es el ahorro mensual en soles?',1040,'S/',"40 × 26 = S/ 1 040."),
+M('Ejercicio resuelto: muebles','En el ejercicio de la clase, ¿cuál es el recorrido más largo por viaje?',["A – B (20 m)","B – C (35 m)","C – D (40 m)","B – E (50 m)"],3,"B → E mide 50 m por viaje y es el más largo."),
+M('Ejercicio resuelto: muebles','¿Qué se propone en el ejercicio de la clase para mejorar?',["Mantener la distribución y comprar más equipos","Reorganizar las áreas siguiendo la secuencia del proceso productivo A → B → C → D → E","Eliminar el almacén de producto terminado","Aumentar los viajes entre áreas no consecutivas"],1,"La propuesta ordena las áreas según la secuencia del proceso productivo."),
+N('Ejercicio resuelto: muebles','Si el total actual es 1 300 m/día y el propuesto es 450 m/día, ¿cuántos metros se ahorran por día?',850,'m/día',"Ahorro = 1 300 − 450 = 850 m/día."),
+M('Ejercicio resuelto: muebles','El ahorro mensual de S/ 4 420 de la clase se calcula bajo el supuesto de que…',["El costo de transporte por metro se mantiene constante","No se trabaja los domingos","Se compran montacargas","Se elimina la pintura"],0,"La diapositiva lo indica: el ahorro es válido si el costo por metro se mantiene constante.")
+],
+'14':[
+M('Manipulación de materiales','La finalidad de la manipulación de materiales es…',["Trasladar los materiales desde el punto de recepción hasta el punto de utilización o despacho, reduciendo costos, tiempos, esfuerzos físicos y riesgos laborales","Guardar los materiales sin moverlos","Vender los productos","Reducir la cantidad de proveedores"],0,"Es la finalidad que plantea la clase."),
+M('Principios de la manipulación','El principio de «reducir la cantidad de movimientos» se llama…',["Planificación","Minimización","Estandarización","Automatización"],1,"Minimización: reducir la cantidad de movimientos."),
+M('Principios de la manipulación','El principio de «evitar interrupciones y acumulaciones» se llama…',["Seguridad","Ergonomía","Flujo continuo","Planificación"],2,"Flujo continuo."),
+M('Principios de la manipulación','El principio de «adaptar el trabajo a las actividades humanas» es…',["Ergonomía","Automatización","Minimización","Estandarización"],0,"Ergonomía."),
+M('Equipos de manipulación','¿Qué equipo transporta materiales automáticamente siguiendo rutas programadas?',["Montacargas","Transpaleta","Vehículo AGV","Grúa puente"],2,"Los vehículos AGV transportan automáticamente por rutas programadas."),
+M('Equipos de manipulación','¿Qué equipo permite levantar y desplazar cargas pesadas dentro de instalaciones industriales?',["Grúa puente","Faja transportadora","Transpaleta","Silo"],0,"Es la descripción de las grúas puente."),
+M('Equipos de manipulación','¿Qué equipo facilita el desplazamiento horizontal de pallets?',["Grúa puente","Transpaleta","Montacargas","Vehículo AGV"],1,"Las transpaletas facilitan el desplazamiento horizontal de pallets."),
+M('Almacenamiento de materiales','La finalidad del almacenamiento es garantizar que los materiales estén disponibles…',["En la cantidad, calidad y momento requeridos por la producción o el servicio","Solo en cantidades grandes","Solo cuando sobran","Siempre en el mismo lugar"],0,"Es la finalidad que indica la clase."),
+M('Tipos de almacenamiento','Para arena y granos, el tipo de almacenamiento del cuadro es…',["En estanterías","En rack para pallets","A granel","Automatizado"],2,"A granel: materiales sin empaque, como arena y granos."),
+M('Tipos de almacenamiento','Para cemento y cereales, el tipo de almacenamiento del cuadro es…',["En silos","En depósitos","En estanterías","En rack"],0,"En silos: almacenamiento vertical cerrado."),
+M('Tipos de almacenamiento','Para productos químicos (condiciones especiales), el tipo del cuadro es…',["A granel","En depósitos","En silos","En estanterías"],1,"En depósitos: controla condiciones especiales."),
+M('Control de inventarios','Si ingresan lubricantes en enero y en febrero y se aplica FIFO, ¿cuáles se despachan primero?',["Los de febrero","Los de enero","Los más baratos","Los más pesados"],1,"FIFO: primero en entrar, primero en salir."),
+M('Control de inventarios','FEFO se aplica principalmente a…',["Productos con fecha de vencimiento, como alimentos y medicamentos","Arena y granos","Maquinaria pesada","Repuestos sin fecha"],0,"FEFO: primero en vencer, primero en salir."),
+M('Control de inventarios','Según la clase, LIFO…',["Es obligatorio por las NIIF","No está permitido según las NIIF","Se usa solo para medicamentos","Equivale a FEFO"],1,"Se usa como modelo de flujo físico en ciertos casos, pero no está permitido según las NIIF."),
+M('Control de inventarios','En la clasificación ABC, la categoría A corresponde a…',["Menor valor económico y control simplificado","Valor intermedio y control moderado","Mayor valor económico acumulado y control estricto y frecuente","Productos vencidos"],2,"A: mayor valor económico acumulado, control estricto y frecuente."),
+N('Indicadores','Costo total de manipulación S/ 8 400 y 1 200 unidades manipuladas. ¿Cuál es el costo de manipulación por unidad?',7,'S/ por unidad',"Cm = costo total / unidades = 8 400 / 1 200 = S/ 7."),
+N('Indicadores','Espacio ocupado: 450 pallets; capacidad total: 500 pallets. ¿Cuál es el porcentaje de utilización?',90,'%',"U = ocupado / capacidad × 100 = 450 / 500 × 100 = 90 %."),
+N('Indicadores','Se dañaron 30 unidades de 1 000 recibidas. ¿Qué porcentaje de materiales dañados es?',3,'%',"D = 30 / 1 000 × 100 = 3 %."),
+N('Indicadores','Costo de ventas mensual S/ 120 000 e inventario promedio S/ 40 000. ¿Cuál es la rotación mensual?',3,'veces/mes',"R = costo de ventas / inventario promedio = 120 000 / 40 000 = 3."),
+N('Indicadores','900 unidades al mes con 10 minutos de manipulación cada una. ¿Cuántas horas mensuales se emplean?',150,'horas',"900 × 10 = 9 000 minutos; 9 000 / 60 = 150 horas."),
+N('Indicadores','El costo mensual de manipulación es S/ 8 000 y una mejora lo reduce 20 %. ¿Cuánto se ahorra al mes?',1600,'S/',"A = 8 000 × 0,20 = S/ 1 600.")
+]
+};
+
+/* ---------- Opción múltiple: [sesión, pregunta, opciones, correcta, explicación] ---------- */
+var MC=[
+/* Sesión 11 */
+['11','¿Qué técnica representa y evalúa el desplazamiento de materiales, personas, herramientas o documentos entre áreas de trabajo?',["Disposición ideal","Análisis de recorrido","Tabla relacional","Clasificación ABC"],1,"Es la definición de análisis de recorrido: sirve para conocer cómo se desarrolla un proceso, medir distancias e identificar movimientos innecesarios, retrocesos y cruces."],
+['11','¿Cuál de estas NO es una utilidad del análisis de recorrido?',["Determinar la distancia total recorrida","Identificar actividades que no agregan valor","Detectar recorridos repetitivos y cruces de flujo","Asignar los códigos A, E, I, O, U, X"],3,"Los códigos de proximidad pertenecen a la tabla relacional (sesión 12), no al análisis de recorrido."],
+['11','Un recorrido baja de 120 m a 75 m por ciclo. ¿Cuál es la reducción porcentual?',["30,77 %","37,5 %","45 %","62,5 %"],1,"(120 − 75) / 120 × 100 = 37,5 %."],
+['11','En el ejemplo del diagrama sencillo (20 m, 30 m y 15 m) con 40 piezas al día, el recorrido diario acumulado es…',["65 m","1 300 m","2 600 m","4 000 m"],2,"DT = 20 + 30 + 15 = 65 m por pieza; 65 × 40 = 2 600 m, es decir 2,6 km."],
+['11','Si el recorrido por pieza baja de 65 m a 45 m, la reducción es…',["20 %","30,77 %","44,4 %","69,2 %"],1,"(65 − 45) / 65 × 100 = 30,77 %."],
+['11','¿Qué herramienta compara las operaciones de varios productos para identificar sus rutas de fabricación?',["Diagrama multiproducto","Diagrama de recorrido sencillo","Análisis matricial","Disposición práctica"],0,"El diagrama multiproducto compara operaciones de varios productos para identificar sus rutas y mejorar la distribución."],
+['11','En la tabla multiproducto, ¿qué significa el guion (--)?',["La operación es la última","El producto no requiere esa operación","La operación se repite","La operación está pendiente"],1,"Los números son el orden de las operaciones; el guion indica que el producto no requiere esa operación."],
+['11','En el análisis de transportación, el tramo Almacén → Corte con 10 viajes de 20 m al día da…',["30 m/día","100 m/día","200 m/día","2 000 m/día"],2,"Viajes × distancia = 10 × 20 = 200 m/día."],
+['11','¿Qué variable indica el número de desplazamientos en un periodo?',["Flujo","Distancia","Costo unitario","Frecuencia"],3,"Frecuencia: número de desplazamientos en un periodo. El flujo es la cantidad transportada."],
+['11','Si el recorrido total baja de 590 m/día a 430 m/día, la reducción es aproximadamente…',["15 %","27,12 %","37,5 %","160 %"],1,"(590 − 430) / 590 × 100 = 27,12 %."],
+['11','En una matriz de flujo, las filas indican…',["El área de destino","El área de origen","La distancia","El costo"],1,"Las filas son el origen y las columnas el destino."],
+['11','Si de A a B hay 20 movimientos diarios y de B a A hay 2, entre A y B hay…',["18","20","22","40"],2,"Se suman ambos sentidos: 20 + 2 = 22 movimientos por día."],
+['11','En la matriz de 3 áreas de la clase, ¿qué par conviene evaluar ubicar más cerca primero?',["Producción y Ensamble (18)","Almacén y Producción (22)","Almacén y Ensamble","Ninguno"],1,"A–B suma 22 y B–C suma 18; Almacén y Producción tienen la relación de movimiento más alta."],
+['11','Según el resumen de la clase, el diagrama de recorrido sencillo responde…',["Dónde colocar los equipos","Por dónde pasan los materiales","Cuánto cuesta transportarlos","Qué relación existe entre las áreas"],1,"Resumen: diagrama de recorrido sencillo, por dónde pasan."],
+['11','Según el resumen de la clase, el análisis matricial responde…',["Dónde colocar los equipos","Cómo se desplazan los materiales","Qué relación existe entre las áreas","Qué rutas siguen varios productos"],2,"Resumen: análisis matricial, qué relación existe entre las áreas."],
+/* Sesión 12 */
+['12','«Absolutamente necesario: deben estar muy próximos» corresponde al código…',["E","A","I","X"],1,"A: absolutamente necesario."],
+['12','El código X de la tabla relacional significa…',["Cercanía ordinaria","Importante","No deseable: conviene mantenerlas separadas","Sin importancia"],2,"X: no deseable."],
+['12','El código O significa…',["Cercanía ordinaria: la cercanía es normal","Sin importancia","Especialmente importante","No deseable"],0,"O: cercanía ordinaria."],
+['12','El código U significa…',["Absolutamente necesario","Sin importancia: la cercanía no es relevante","Especialmente importante","Importante"],1,"U: sin importancia."],
+['12','En la clase, Almacén–Oficina lleva el código O porque…',["El ruido es alto","Hay secuencia directa de producción","La proximidad no es indispensable","El material se traslada con frecuencia"],2,"La proximidad no es indispensable."],
+['12','En la clase, Corte–Mecanizado lleva el código A porque…',["Existe una secuencia directa de producción","Hay riesgo de ruido","Son oficinas","No se relacionan"],0,"Existe una secuencia directa de producción."],
+['12','¿Qué diagrama considera también el tamaño de las áreas?',["Diagrama relacional de actividades","Diagrama relacional de espacios","Diagrama de recorrido","Tabla relacional"],1,"El diagrama relacional de espacios incorpora el espacio requerido por cada área."],
+['12','El total de las áreas del ejercicio 3 (100, 200 y 80 m²) es…',["280 m²","380 m²","480 m²","3 800 m²"],1,"100 + 200 + 80 = 380 m². La diapositiva escribe 3 800 por error."],
+['12','La disposición ideal es…',["La distribución ya construida","La distribución teórica que busca la mejor organización posible sin considerar inicialmente todas las limitaciones","La distribución de presupuesto mínimo","La tabla de proximidad"],1,"Es la distribución teórica y sirve de referencia."],
+['12','La disposición práctica debe considerar…',["Solo el flujo ideal","Las condiciones existentes, los recursos disponibles y las restricciones técnicas y económicas","Solo el tamaño de las oficinas","Nada: es teórica"],1,"Es la que puede implementarse realmente."],
+['12','¿Cuál NO es un factor de la disposición práctica?',["Ubicación de columnas, paredes y accesos","Máquinas e instalaciones existentes","Posibilidad de futuras ampliaciones","Ignorar el presupuesto disponible"],3,"El presupuesto disponible sí se considera."],
+['12','En el ejercicio 5 (local de 500 m², áreas de 80, 120, 180 y 70 m²), el espacio restante es…',["45 m²","50 m²","450 m²","500 m²"],1,"80 + 120 + 180 + 70 = 450; 500 − 450 = 50 m²."],
+['12','En el ejercicio 5, ¿qué relación lleva el código X?',["A–B","B–C","A–C","A–D"],3,"A–D: se busca evitar cruces innecesarios entre entradas y salidas."],
+['12','El diagrama de recorrido se distingue del relacional de actividades porque…',["Representa sobre el plano el camino que siguen materiales, productos o personas","Muestra los m² requeridos","Asigna los códigos A–X","Es la disposición ideal"],0,"El de recorrido dibuja el camino real sobre el plano de la planta."],
+['12','En el método 3 del ejercicio 5 (disposición práctica) se debe comprobar que…',["Las columnas desaparezcan","El orden de corte, mecanizado y almacenamiento no genere recorridos excesivos","No haya pasillos","Todas las áreas midan igual"],1,"La diapositiva lo indica, junto con que el espacio restante alcance para pasillos, equipos y emergencias."],
+/* Sesión 13 */
+['13','La evaluación de la distribución de plantas existentes tiene como objetivo…',["Comprobar si la distribución actual permite operar eficientemente o si hay problemas","Aumentar los precios","Eliminar la producción","Reducir la plantilla"],0,"Es el objetivo planteado por la clase."],
+['13','¿Cuál es la primera etapa de la evaluación?',["Comparar resultados","Proponer mejoras","Recopilar información","Utilizar herramientas"],2,"La primera etapa es recopilar información: plano, procesos, ubicación de máquinas, recorridos, tiempos y costos."],
+['13','La última etapa de la evaluación es…',["Identificar problemas","Comparar los resultados","Recopilar información","Analizar la distribución actual"],1,"Se compara la distribución actual con la propuesta."],
+['13','El método de observación directa consiste en…',["Recorrer la planta y observar cómo se realizan las operaciones","Calcular la matriz de flujo","Clasificar en A, B y C","Medir la rotación"],0,"Permite identificar recorridos innecesarios, congestión, esperas, espacios desaprovechados y riesgos."],
+['13','El diagrama de recorrido permite identificar…',["Cruces, retrocesos, recorridos largos y áreas con mayor circulación","La rotación de inventario","Materiales vencidos","El presupuesto"],0,"Es lo que enumera la clase."],
+['13','El objetivo de la tabla relacional en la evaluación es…',["Ubicar próximas las áreas que trabajan en conjunto","Calcular los costos de manipulación","Medir el tiempo de despacho","Clasificar inventarios"],0,"Analiza qué áreas deben estar cerca o lejos según la frecuencia de interacción."],
+['13','El análisis de transportación evalúa el movimiento interno considerando…',["Distancias, frecuencia de transporte, costos y medios de transporte","Solo el color de los equipos","Solo la cantidad de oficinas","La fecha de vencimiento"],0,"Su objetivo es reducir el costo del manejo de materiales."],
+['13','En el ejercicio de la clase, la fórmula de la distancia recorrida diaria es…',["DR = D + V","DR = D × V","DR = D / V","DR = V − D"],1,"DR = distancia entre áreas × número de viajes diarios."],
+['13','Con la fórmula de la clase, A → B con 20 m y 10 viajes diarios recorre…',["30 m","100 m","200 m","2 000 m"],2,"DR = 20 × 10 = 200 m."],
+['13','La distancia total recorrida diariamente en la distribución actual del ejercicio es…',["450 m","850 m","1 300 m","2 600 m"],2,"200 + 350 + 320 + 240 + 90 + 100 = 1 300 m (1,3 km)."],
+['13','La reducción porcentual de 1 300 m a 450 m en el ejercicio de la clase es…',["34,62 %","65,38 %","850 %","45 %"],1,"(1 300 − 450) / 1 300 × 100 = 65,38 %."],
+['13','Con S/ 0,20 por metro, el costo diario actual es S/ 260 y el propuesto S/ 90. El ahorro diario es…',["S/ 90","S/ 170","S/ 260","S/ 350"],1,"260 − 90 = S/ 170."],
+['13','Con ahorro de S/ 170 diarios y 26 días al mes, el ahorro mensual es…',["S/ 1 700","S/ 4 420","S/ 6 500","S/ 9 000"],1,"170 × 26 = S/ 4 420."],
+['13','En el ejercicio de la clase, ¿cuál es el recorrido más largo por viaje?',["A – B","C – D","A – D","B – E"],3,"B → E: 50 m por viaje."],
+['13','Tras identificar los problemas, la etapa siguiente de la evaluación es…',["Proponer mejoras","Recopilar información","Observar la planta por primera vez","Cerrar el análisis sin cambios"],0,"Después de identificar problemas se propone una nueva distribución."],
+/* Sesión 14 */
+['14','La manipulación de materiales es…',["El conjunto de actividades, métodos, equipos y procedimientos para mover, levantar, transportar, posicionar, proteger y controlar materiales","El proceso de contratación de personal","El diseño del producto","Un método de costeo"],0,"Es la definición de la clase."],
+['14','¿Con qué criterios se seleccionan los equipos de manipulación?',["Peso, volumen, distancia, frecuencia de movimiento y características del material","Solo por el precio","Solo por el color","Por la marca únicamente"],0,"Así lo indica la clase."],
+['14','El montacargas permite…',["Levantar, transportar y apilar cargas pesadas sobre pallets","Solo medir el inventario","Trasladar materiales de forma continua sin levantar","Almacenar a granel"],0,"Es la descripción del montacargas."],
+['14','Las fajas transportadoras…',["Trasladan materiales de manera continua entre operaciones","Levantan cargas con grúa","Almacenan cemento","Clasifican en A, B y C"],0,"Trasladan materiales de manera continua entre diferentes operaciones."],
+['14','El almacenamiento en rack para pallets permite…',["Almacenar carga en altura","Almacenar solo repuestos pequeños","Almacenar a granel","Controlar condiciones especiales"],0,"Rack para pallets: carga en altura."],
+['14','FIFO significa…',["Primero en entrar, primero en salir","Último en entrar, primero en salir","Primero en vencer, primero en salir","Primero en salir, último en entrar"],0,"First In, First Out."],
+['14','FEFO significa…',["Primero en entrar, primero en salir","Último en entrar, primero en salir","Primero en vencer, primero en salir","Ninguno de los anteriores"],2,"First Expired, First Out."],
+['14','Según la clase, el método LIFO…',["Es el único permitido","No está permitido según las NIIF","Se usa para medicamentos","Es igual a FEFO"],1,"Se menciona como modelo de flujo físico, pero no está permitido según las NIIF."],
+['14','En la clasificación ABC, la categoría C corresponde a…',["Menor valor económico y control simplificado","Mayor valor y control estricto","Valor intermedio y control moderado","Productos con fecha de vencimiento"],0,"C: menor valor económico, control simplificado."],
+['14','En el ejercicio de la clase, la utilización del almacén (480 de 600 pallets) es…',["60 %","75 %","80 %","90 %"],2,"480 / 600 × 100 = 80 %; quedan 120 pallets libres."],
+['14','El costo de manipulación por unidad del ejercicio (S/ 7 200 y 1 200 unidades) es…',["S/ 3","S/ 6","S/ 12","S/ 60"],1,"7 200 / 1 200 = S/ 6."],
+['14','La rotación del inventario del ejercicio (ventas S/ 160 000; inventario promedio S/ 80 000) es…',["0,5 veces al mes","1 vez al mes","2 veces al mes","4 veces al mes"],2,"160 000 / 80 000 = 2 veces al mes."],
+['14','El tiempo de manipulación del ejercicio (1 200 unidades × 15 min) es…',["30 horas","150 horas","300 horas","18 000 horas"],2,"18 000 minutos / 60 = 300 horas."],
+['14','Con una reducción del 20 % sobre S/ 7 200, el nuevo costo mensual es…',["S/ 1 440","S/ 5 760","S/ 7 200","S/ 8 640"],1,"7 200 − 1 440 = S/ 5 760."],
+['14','Si el costo de manipulación aumenta, la clase indica que la empresa debe investigar…',["Recorridos excesivos, equipos inadecuados, movimientos innecesarios o mala distribución de planta","Solo el precio de venta","Solo la cantidad de clientes","Nada, es normal"],0,"Es la interpretación del indicador de costo de manipulación."]
+];
+
+/* ---------- Verdadero o falso: [sesión, afirmación, esVerdadero, explicación] ---------- */
+var TF=[
+['11','La distribución de detalle solo se ocupa de calcular costos de transporte.',false,"Organiza y ubica máquinas, equipos, herramientas, materiales y puestos de trabajo dentro de un área."],
+['11','El diagrama de recorrido sencillo usa líneas o flechas para mostrar el recorrido y el sentido del desplazamiento.',true,"Las líneas o flechas son uno de sus elementos principales."],
+['11','Si la distancia recorrida baja, ya está confirmado que la mejora global es buena.',false,"También se deben evaluar tiempos de transporte, manipulación, seguridad y costo de implementación."],
+['11','En el diagrama multiproducto, los números indican el orden de las operaciones.',true,"El guion indica que el producto no requiere esa operación."],
+['11','En el análisis de transportación, la frecuencia es el costo de transportar una unidad por unidad de distancia.',false,"Eso es el costo unitario (Cij); la frecuencia es el número de desplazamientos en un periodo."],
+['11','En una matriz de flujo, los movimientos entre dos áreas siempre son iguales en ambos sentidos.',false,"Pueden ser asimétricos: por ejemplo, 20 de A a B y 2 de B a A."],
+['11','Si de A a B hay 20 movimientos y de B a A hay 2, entre ambas áreas hay 22 movimientos por día.',true,"Se suman los dos sentidos: 20 + 2 = 22."],
+['11','El análisis de recorrido ayuda a identificar actividades que no agregan valor.',true,"Es una de sus utilidades."],
+['11','El análisis matricial identifica qué áreas conviene ubicar cerca.',true,"Organiza flujos y relaciones entre áreas en filas y columnas para mejorar la distribución."],
+['12','En la tabla relacional, el código X significa que conviene mantener las áreas separadas.',true,"X: no deseable."],
+['12','En la tabla relacional, el código O significa «absolutamente necesario».',false,"Absolutamente necesario es A; O es cercanía ordinaria."],
+['12','El diagrama relacional de espacios considera también el tamaño de las áreas.',true,"Esa es su diferencia con el diagrama relacional de actividades."],
+['12','La disposición ideal considera desde el inicio todas las limitaciones físicas y económicas.',false,"La ideal no las considera inicialmente."],
+['12','La disposición práctica debe adaptarse a las características concretas de la instalación.',true,"Es la que puede implementarse realmente."],
+['12','En una buena distribución general, las piezas deben avanzar sin retrocesos innecesarios.',true,"Es lo que indica el ejemplo de la clase."],
+['12','En el ejercicio 5, el espacio restante de 50 m² se reservó inicialmente para pasillos y circulación.',true,"Hay que comprobar después si es suficiente para la seguridad y el transporte interno."],
+['12','La tabla relacional determina cuántos metros cuadrados necesita cada área.',false,"Eso lo hace el diagrama relacional de espacios; la tabla establece la cercanía deseable."],
+['12','El código U significa que la cercanía no es relevante.',true,"U: sin importancia."],
+['13','Evaluar una planta existente consiste en analizar si su organización actual es eficiente y, si no lo es, proponer mejoras.',true,"Es el objetivo de la sesión."],
+['13','La observación directa permite identificar recorridos innecesarios y riesgos de seguridad.',true,"También congestión, esperas y espacios desaprovechados."],
+['13','La comparación antes y después considera únicamente la distancia recorrida.',false,"También considera tiempo de producción, costos y productividad."],
+['13','La primera etapa de la evaluación es proponer mejoras.',false,"La primera es recopilar información."],
+['13','La fórmula de la distancia recorrida diaria es DR = D × V.',true,"Distancia entre áreas por viajes diarios."],
+['13','En el ejercicio de la clase, el recorrido actual es de 450 m diarios.',false,"El actual es 1 300 m/día; 450 m es el propuesto."],
+['13','El ahorro mensual de S/ 4 420 supone que el costo de transporte por metro se mantiene constante.',true,"Es el supuesto indicado en la diapositiva."],
+['13','En la evaluación, identificar los problemas ocurre antes de recopilar información.',false,"Primero se recopila información, luego se analiza, se usan herramientas y se identifican problemas."],
+['14','La manipulación de materiales incluye mover, levantar, transportar, posicionar, proteger y controlar materiales.',true,"Es parte de su definición."],
+['14','La grúa puente sirve principalmente para desplazar horizontalmente pallets pequeños.',false,"Eso lo hace la transpaleta; la grúa puente levanta y desplaza cargas pesadas dentro de instalaciones industriales."],
+['14','FEFO se aplica principalmente a productos con fecha de vencimiento.',true,"Por ejemplo, alimentos y medicamentos."],
+['14','Según la clase, LIFO está permitido por las NIIF.',false,"No está permitido según las NIIF."],
+['14','En la clasificación ABC, la categoría A requiere control estricto y frecuente.',true,"Tiene el mayor valor económico acumulado."],
+['14','La rotación del inventario se calcula como costo de venta dividido entre inventario promedio.',true,"Es la fórmula de la clase."],
+['14','Si un almacén ocupa 480 de 600 pallets, su utilización es del 60 %.',false,"480 / 600 × 100 = 80 %."],
+['14','Si aumenta el costo de manipulación, puede deberse a recorridos excesivos o a una mala distribución de planta.',true,"Es la interpretación del indicador."]
+];
+
+/* ===== Motor de ejercicios y cuestionarios ===== */
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function fmt(n){try{return n.toLocaleString('es-PE',{maximumFractionDigits:2})}catch(e){return String(n)}}
+  function parseNum(s){
+    var t=String(s).replace(/[^0-9.,\-]/g,'');
+    if(/,\d{1,2}$/.test(t)) t=t.replace(/\./g,'').replace(',','.'); else t=t.replace(/,/g,'');
+    var v=parseFloat(t); return isFinite(v)?v:NaN;
+  }
+  function permute(o,a){
+    var long=o.some(function(x){return x.length>14}); if(!long) return {o:o,a:a};
+    var idx=o.map(function(_,i){return i}); for(var i=idx.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=idx[i];idx[i]=idx[j];idx[j]=t}
+    return {o:idx.map(function(k){return o[k]}),a:idx.indexOf(a)};
+  }
+  var uid=0;
+
+  /* ---------- Ejercicios dentro de cada sesión ---------- */
+  function renderEx(root){
+    var ses=root.dataset.ses, items=EX[ses].map(function(x){if(x.t!=='mc')return x;var p=permute(x.o,x.a);return {t:x.t,c:x.c,q:x.q,e:x.e,o:p.o,a:p.a}}), st=items.map(function(){return null}), id='e'+ses;
+    var html='<h2 class="exh2"><span class="num">S'+ses+'</span>Ejercicios para grabar el tema</h2>'
+      +'<p class="lead">'+items.length+' ejercicios en el orden de la teoría de esta sesión. Responde, pulsa «Comprobar» y lee la explicación. Si fallas, pulsa «Reintentar».</p>'
+      +'<div class="exbar" role="status" aria-live="polite"><span><b data-ok>0</b> correctas de '+items.length+'</span><span><b data-done>0</b> respondidas</span><button type="button" class="btn" data-reset>Reiniciar</button></div><div class="exlist">';
+    items.forEach(function(it,i){
+      var n='q'+(++uid);
+      html+='<div class="ex" data-i="'+i+'"><div class="exh"><span class="exn">'+(i+1)+'</span><span class="chip">'+esc(it.c)+'</span></div><p class="qq">'+esc(it.q)+'</p>';
+      if(it.t==='mc'){ html+='<div class="opts">'+it.o.map(function(o,k){return '<label class="opt"><input type="radio" name="'+n+'" value="'+k+'"><span>'+esc(o)+'</span></label>'}).join('')+'</div>'; }
+      else { html+='<div class="numin"><label>Tu respuesta <input type="text" inputmode="decimal" autocomplete="off" data-num aria-label="Respuesta del ejercicio '+(i+1)+'"></label> <span class="unit">'+esc(it.u)+'</span></div><p class="hint">Escribe solo el número.</p>'; }
+      html+='<div class="exa"><button type="button" class="btn" data-chk>Comprobar</button></div><div class="feed" hidden></div></div>';
+    });
+    root.innerHTML=html+'</div>';
+    function upd(){var ok=st.filter(function(x){return x===true}).length, dn=st.filter(function(x){return x!==null}).length; $('[data-ok]',root).textContent=ok; $('[data-done]',root).textContent=dn}
+    function lock(card,on){$$('input',card).forEach(function(x){x.disabled=on})}
+    root.addEventListener('change',function(e){var l=e.target.closest('.opt'); if(!l) return; $$('.opt',l.parentNode).forEach(function(x){x.classList.remove('sel')}); l.classList.add('sel')});
+    root.addEventListener('click',function(e){
+      var card=e.target.closest('.ex');
+      if(e.target.closest('[data-reset]')){ st=items.map(function(){return null}); $$('.ex',root).forEach(function(c){reset(c)}); upd(); return }
+      if(!card) return;
+      var i=+card.dataset.i, it=items[i], btn=e.target.closest('[data-chk]'); if(!btn) return;
+      if(st[i]!==null){ reset(card); st[i]=null; upd(); return }
+      var ok=false, feed=$('.feed',card), given;
+      if(it.t==='mc'){
+        var sel=$('input:checked',card); if(!sel){feed.hidden=false;feed.className='feed warnf';feed.textContent='Elige una opción antes de comprobar.';return}
+        given=+sel.value; ok=given===it.a;
+        $$('.opt',card).forEach(function(l,k){l.classList.remove('sel'); if(k===it.a) l.classList.add('ok'); else if(k===given) l.classList.add('no')});
+      } else {
+        var inp=$('[data-num]',card), v=parseNum(inp.value); if(isNaN(v)){feed.hidden=false;feed.className='feed warnf';feed.textContent='Escribe un número para comprobar.';return}
+        ok=Math.abs(v-it.a)<=Math.max(0.01,Math.abs(it.a)*0.002);
+        inp.classList.add(ok?'okin':'noin');
+      }
+      st[i]=ok; lock(card,true); btn.textContent='Reintentar';
+      var corr= it.t==='mc' ? it.o[it.a] : fmt(it.a)+' '+it.u;
+      feed.hidden=false; feed.className='feed '+(ok?'ok':'no');
+      feed.innerHTML='<b>'+(ok?'Correcto.':'Incorrecto.')+'</b> '+(ok?'':'Respuesta correcta: <b>'+esc(corr)+'</b>.')+'<div class="why"><b>Por qué:</b> '+esc(it.e)+'</div>';
+      upd();
+    });
+    function reset(card){ lock(card,false); $$('.opt',card).forEach(function(l){l.className='opt'}); $$('input[type=radio]',card).forEach(function(x){x.checked=false}); var n=$('[data-num]',card); if(n){n.value='';n.className=''} var f=$('.feed',card); f.hidden=true; f.className='feed'; f.innerHTML=''; $('[data-chk]',card).textContent='Comprobar' }
+  }
+
+  /* ---------- Cuestionario paso a paso ---------- */
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+  function runQuiz(root,cfg){
+    var all=cfg.items.map(function(x,i){var p=permute(x[2],x[3]);return {s:x[0],q:x[1],o:p.o,a:p.a,e:x[4],id:i}});
+    var filt='all', mix=true;
+    function setup(){
+      var counts={all:all.length}; ['11','12','13','14'].forEach(function(s){counts[s]=all.filter(function(x){return x.s===s}).length});
+      root.innerHTML='<div class="def"><span class="k">'+esc(cfg.kicker)+'</span>'+esc(cfg.intro)+'</div>'
+        +'<h4>¿Qué sesión quieres practicar?</h4><div class="chips" role="group" aria-label="Sesión">'
+        +[['all','Todas ('+counts.all+')'],['11','Sesión 11 ('+counts['11']+')'],['12','Sesión 12 ('+counts['12']+')'],['13','Sesión 13 ('+counts['13']+')'],['14','Sesión 14 ('+counts['14']+')']].map(function(c){return '<button type="button" class="btn" data-f="'+c[0]+'" aria-pressed="'+(filt===c[0])+'">'+c[1]+'</button>'}).join('')
+        +'</div><p><label><input type="checkbox" data-mix '+(mix?'checked':'')+'> Mezclar el orden de las preguntas</label></p>'
+        +'<p><button type="button" class="btn go" data-start>Empezar</button></p>';
+    }
+    function start(list){
+      var qs=mix?shuffle(list):list.slice(), i=0, score=0, wrong=[], answered=false, chosen=null;
+      function show(){
+        var q=qs[i], pct=Math.round(i/qs.length*100);
+        root.innerHTML='<div class="qtop"><span>Pregunta <b>'+(i+1)+'</b> de '+qs.length+'</span><span>Aciertos: <b>'+score+'</b></span></div><div class="prog" aria-hidden="true"><i style="width:'+pct+'%"></i></div>'
+          +'<p class="qq"><span class="chip">Sesión '+q.s+'</span> '+esc(q.q)+'</p>'
+          +'<div class="opts" role="radiogroup">'+q.o.map(function(o,k){return '<label class="opt"><input type="radio" name="qz" value="'+k+'"><span>'+esc(o)+'</span></label>'}).join('')+'</div>'
+          +'<div class="feed" hidden></div><div class="exa"><button type="button" class="btn go" data-next disabled>Siguiente</button> <button type="button" class="btn" data-quit>Salir</button></div>';
+        answered=false; chosen=null;
+      }
+      function finish(){
+        var pc=Math.round(score/qs.length*100), by={};
+        qs.forEach(function(q){by[q.s]=by[q.s]||[0,0]; by[q.s][1]++});
+        qs.forEach(function(q){ if(wrong.indexOf(q)<0) by[q.s][0]++ });
+        root.innerHTML='<div class="out"><div class="hi"><small>Resultado</small><b>'+score+' / '+qs.length+'</b></div><div><small>Porcentaje</small><b>'+pc+' %</b></div></div>'
+          +'<div class="tw"><table><thead><tr><th>Sesión</th><th class="n">Aciertos</th></tr></thead><tbody>'+Object.keys(by).sort().map(function(s){return '<tr><td>Sesión '+s+'</td><td class="n">'+by[s][0]+' de '+by[s][1]+'</td></tr>'}).join('')+'</tbody></table></div>'
+          +(wrong.length?'<h3>Para repasar ('+wrong.length+')</h3>'+wrong.map(function(q){return '<div class="ex"><div class="exh"><span class="chip">Sesión '+q.s+'</span></div><p class="qq">'+esc(q.q)+'</p><div class="feed no"><b>Respuesta correcta: '+esc(q.o[q.a])+'</b><div class="why"><b>Por qué:</b> '+esc(q.e)+'</div></div></div>'}).join(''):'<div class="feed ok"><b>Sin errores. Excelente.</b></div>')
+          +'<p class="exa"><button type="button" class="btn go" data-again>Repetir</button> '+(wrong.length?'<button type="button" class="btn" data-fails>Repetir solo las falladas</button> ':'')+'<button type="button" class="btn" data-quit>Cambiar de sesión</button></p>';
+      }
+      root.onchange=function(e){var l=e.target.closest('.opt'); if(!l||answered) return; chosen=+e.target.value; $$('.opt',root).forEach(function(x){x.classList.remove('sel')}); l.classList.add('sel'); $('[data-next]',root).disabled=false};
+      root.onclick=function(e){
+        if(e.target.closest('[data-quit]')){ root.onchange=null; root.onclick=null; bindSetup(); setup(); return }
+        if(e.target.closest('[data-again]')){ start(list); return }
+        if(e.target.closest('[data-fails]')){ start(wrong.slice()); return }
+        var nx=e.target.closest('[data-next]'); if(!nx) return;
+        var q=qs[i];
+        if(!answered){
+          if(chosen===null) return;
+          answered=true; var ok=chosen===q.a; if(ok) score++; else wrong.push(q);
+          $$('.opt',root).forEach(function(l,k){l.classList.remove('sel'); if(k===q.a) l.classList.add('ok'); else if(k===chosen) l.classList.add('no'); $('input',l).disabled=true});
+          var f=$('.feed',root); f.hidden=false; f.className='feed '+(ok?'ok':'no');
+          f.innerHTML= ok ? '<b>Correcto.</b><div class="why"><b>Por qué:</b> '+esc(q.e)+'</div>' : '<b>Incorrecto.</b> La respuesta correcta es: <b>'+esc(q.o[q.a])+'</b><div class="why"><b>Por qué:</b> '+esc(q.e)+'</div>';
+          nx.textContent= i===qs.length-1 ? 'Ver resultado' : 'Continuar';
+          nx.focus();
+        } else { if(i===qs.length-1){ finish() } else { i++; show() } }
+      };
+      show();
+    }
+    function bindSetup(){
+      root.onclick=function(e){
+        var b=e.target.closest('[data-f]'); if(b){ filt=b.dataset.f; $$('[data-f]',root).forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')}); return }
+        if(e.target.closest('[data-start]')){ mix=$('[data-mix]',root).checked; start(filt==='all'?all:all.filter(function(x){return x.s===filt})) }
+      };
+    }
+    bindSetup(); setup();
+  }
+
+  $$('.exs').forEach(renderEx);
+  runQuiz($('#quiz-mc'),{items:MC,kicker:'Opción múltiple',intro:'Elige una alternativa y pulsa «Siguiente». Te diré si es correcta; si no lo es, verás la respuesta correcta y por qué. Luego pulsa «Continuar».'});
+  var TFI=TF.map(function(x){return [x[0],x[1],['Verdadero','Falso'],x[2]?0:1,x[3]]});
+  runQuiz($('#quiz-vf'),{items:TFI,kicker:'Verdadero o falso',intro:'Lee la afirmación, elige Verdadero o Falso y pulsa «Siguiente». Si fallas, verás la respuesta correcta y la explicación.'});
+})();
+
+</script>
+</body>
+</html>
